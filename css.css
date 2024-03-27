@@ -1,0 +1,16 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #333;
+    height: 100%;
+}
+
+
+#cavans {
+    background-image: url("./PNG/Backgrouns/sky.jpg");
+    background-size: cover;
+    background-position: center;
+    background-position-y: 150%;
+    border: 1px solid white;
+}
