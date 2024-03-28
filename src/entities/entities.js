@@ -1,33 +1,31 @@
-import { Blocks } from "../blocks/blocks.js"
-import { player_variants } from "./player.variants.js"
+import { MapGame } from "../main.js"
 
-export class Entities extends Blocks {
+export class Entities extends MapGame {
 
     constructor() {
         super()
-        this.enties_variants = {
-            ...player_variants,
-        }
         this.entities = {} //Aca se guardan todas las entidades generadas
     }
 
 
-    drawEntity({ dx, dy, src, hit_box }) {
-
-        const img = new Image()
-
-        img.src = "./adventurer-idle-00.png"
+    drawEntity({ dx, dy, img, hit_box, test }) {
 
         const pixel = this.pixel
-
         const ctx = this.ctx
-
         const newX = dx * pixel
         const newY = dy * pixel
 
-        img.onload = function() {
-            ctx.drawImage(img,newX, newY, hit_box.width, hit_box.height);
+        if(test){
+            ctx.save(); // Guardar el estado actual del contexto
+            ctx.scale(-1, 1)
+            ctx.drawImage(img, -hit_box.width, dy * pixel,hit_box.width,hit_box.height);
+            ctx.restore();
+        }else {
+
+            ctx.drawImage(img, newX, newY, hit_box.width, hit_box.height);
         }
+        // Reflejar la imagen horizontalmente
+
 
     }
 
@@ -37,7 +35,7 @@ export class Entities extends Blocks {
 
         const { name, id } = entity
 
-        const { hit_box } = this.enties_variants[name]
+        const { hit_box } = this.models[name]
 
         const { position } = this.entities[name][id]
 
@@ -48,9 +46,8 @@ export class Entities extends Blocks {
                 const newX = (position.x + x) * this.pixel
                 const newY = (position.y + y) * this.pixel
 
-                
+
                 if (hit_box.y == y + 1) {
-                    console.log("F")
                     ctx.clearRect(newX, newY, hit_box.width, hit_box.height)
                 }
 
@@ -61,16 +58,23 @@ export class Entities extends Blocks {
 
     moveEntity({ entity, dx = 0, dy = 0, action = "idle" }) {
 
-
         const { name, id } = entity
 
-        const { hit_box, animations } = this.enties_variants[name]
+        const { hit_box, animations } = this.models[name]
 
-        const entityActually = this.entities[name][id]
+        const currentEntity = this.entities[name][id]
+
+        const { position } = currentEntity
+
+        const currentStage = position.stage_animation + 1
+
+        const currentAnimation = animations[action]
+
+        const vericationStage = currentStage > (animations[action].length - 1) ? 0 : currentStage
+
+        position.stage_animation = vericationStage
 
         this.drawEntityRemove({ entity })
-
-        const { position } = entityActually
 
         for (let y = 0; y < hit_box.y; y++) {
 
@@ -80,17 +84,23 @@ export class Entities extends Blocks {
 
                 const newY = dy + y + position.y
 
+
                 if (hit_box.y == y + 1) {
-                    this.drawEntity({ dx: newX, dy: newY, src: animations[action], hit_box })
+                    this.drawEntity({
+                        dx: newX,
+                        dy: newY,
+                        img: currentAnimation[position.stage_animation],
+                        hit_box,
+                        test: name == "playessr"
+                    })
                 }
 
                 this.matriz[newY][newX] = entity
             }
         }
-
-        entityActually.position["x"] = dx + position.x
-        entityActually.position["y"] = dy + position.y
-        entityActually.position.action = action
+        currentEntity.position["x"] = dx + position.x
+        currentEntity.position["y"] = dy + position.y
+        currentEntity.position.action = action
     }
 
 
@@ -105,7 +115,7 @@ export class Entities extends Blocks {
                 },
                 position: {
                     action: "idle",
-                    stage_animation: 0,
+                    stage_animation: -1,
                     x: 0,
                     y: 0
                 }
@@ -115,7 +125,7 @@ export class Entities extends Blocks {
 
         this.entities[entity] = { ...this.entities[entity], ...property_defaults }
 
-        this.moveEntity({ entity: { name: entity, id: id_generate }, dy: 9, dx: 0 })
+        this.moveEntity({ entity: { name: entity, id: id_generate }, dy: 12, dx: 0 })
 
     }
 

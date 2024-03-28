@@ -1,23 +1,17 @@
-const block_variants = {
-    0: {
-        name: "grass",
-        src: "./PNG/Tiles/dirt_grass.png",
+const block_initial_stats = {
+    "grass": {
         stats: {
             durability: 1
         }, floor: { min_floor: 15, max_floor: 15 }
     },
-    1: {
-        name: "dirt",
-        src: "./PNG/Tiles/dirt.png",
+    "dirt": {
         stats: {
             durability: 0.5
         }, floor: {
             min_floor: 16, max_floor: 19
         }
     },
-    2: {
-        name: "stone",
-        src: "./PNG/Tiles/stone.png",
+    "stone": {
         stats: {
             durability: 2
         },
@@ -27,4 +21,4 @@ const block_variants = {
     }
 }
 
-export default block_variants
+export default block_initial_stats

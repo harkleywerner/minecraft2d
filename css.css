@@ -8,7 +8,8 @@ body {
 
 
 #cavans {
-    background-image: url("src/biomes/forest/windrise-background-4k.png");
+    /* background-image: url("src/biomes/forest/windrise-background-4k.png"); */
+    background-color: white;
     background-size: cover;
     background-position: center;
     background-position-y: 60%;

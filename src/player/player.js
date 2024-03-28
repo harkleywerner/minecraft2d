@@ -1,7 +1,7 @@
-import { Entities } from "../entities/entities.js"
+import { Blocks } from "../blocks/blocks.js";
 
 
-export class Player extends Entities {
+export class Player extends Blocks {
     constructor() {
         super()
         this.keysEvents = new Set();
@@ -10,6 +10,11 @@ export class Player extends Entities {
 
 
     moveToKeyboard() {
+
+        setInterval(() => {
+            console.log("FF")
+            this.moveEntity({ entity : { name: "player", id: "player:1" }, dx: 0, action: "idle" });
+        }, 700);
 
         window.addEventListener("keydown", (e) => {
             this.keysEvents.add(e.key)
@@ -29,6 +34,8 @@ export class Player extends Entities {
 
             const entity = { name: "player", id: "player:1" }
 
+          
+
             this.keysEvents.forEach(key => {
                 if (key === "d") {
                     this.moveEntity({ entity, dx: this.moveSpeed, action: "run" });
@@ -45,9 +52,11 @@ export class Player extends Entities {
     }
 }
 
-const init = new Player()
-
-init.generateMatriz()
-init.generateBlock()
-init.generateEntity("player")
-init.moveToKeyboard()
+const init = new Player();
+(async () => {
+    await init.loadAllImg()
+    init.generateMatriz()
+    init.generateEntity("player")
+    init.generateBlock()
+    init.moveToKeyboard()
+})()

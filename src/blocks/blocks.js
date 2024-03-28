@@ -1,13 +1,13 @@
-import { MapGame } from "../main.js"
-import block_variants from "./block.variants.js"
+import { Entities } from "../entities/entities.js"
 import generateRange from "../utils/generateRange.utils.js"
+import block_initial_stats from "./blockInitial_stats.js"
 
-export class Blocks extends MapGame { //=> Durability 1-6
+export class Blocks extends Entities { //=> Durability 1-6
 
     constructor() {
         super()
         this.blocks = {
-            ...block_variants
+            ...block_initial_stats
         }
     }
 
@@ -17,7 +17,9 @@ export class Blocks extends MapGame { //=> Durability 1-6
 
             const block = this.blocks[obj]
 
-            const { floor, src, stats, name } = block
+            const { animations, hit_box } = this.models["blocks"]
+
+            const { floor, stats, name } = block
 
             const { min_floor, max_floor } = floor
 
@@ -33,23 +35,11 @@ export class Blocks extends MapGame { //=> Durability 1-6
 
                     this.matriz[floorRange[i]][j] = { ...stats, health: 100, id: obj, name: name }
 
-                    this.generateLienzoBlock({ src, x: j * this.pixel, y: floorRange[i] * this.pixel })
+                    this.drawEntity({ dx: j, dy: floorRange[i], hit_box,img : animations[obj][0] })
+
                 }
             }
         }
     }
 
-    generateLienzoBlock({ src, x = 0, y = 0 }) {
-
-        const img = new Image()
-
-        const pixel = this.pixel
-
-        img.src = src
-
-        img.onload = () => {
-            this.ctx.drawImage(img, x, y, pixel, pixel)
-        }
-
-    }
 }
