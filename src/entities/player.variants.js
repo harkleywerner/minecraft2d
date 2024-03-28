@@ -1,8 +1,18 @@
+import { playerIdleModel } from "./Models/Player/idle/playerIdle.models.js";
+import { playerRunModels } from "./Models/Player/run/playerRun.models.js";
+
 export const player_variants = {
-    male: [
-        [{ src: "/PNG/Characters/Alien/alien_head.png", pixel_x: 20 }],
-        [{ src: "/PNG/Characters/Alien/alien_body.png", pixel_x: 20 }, { src: "/PNG/Characters/Alien/alien_arm.png", pixel_x: 20, pixel_y : 10 }],
-        [{ src: "/PNG/Characters/Alien/alien_leg.png", pixel_x: 20 }]
-    ]
+    "player": {
+        hit_box: {
+            x: 1,
+            y: 2,
+            height: 50,
+            width: 25
+        },
+        animations: {
+            run: playerRunModels(),
+            idle: playerIdleModel()
+        }
+    }
 
 }

@@ -12,7 +12,11 @@ export class Entities extends Blocks {
     }
 
 
-     drawEntity({ dx, dy, src, pixel_x, pixel_y }) {
+    drawEntity({ dx, dy, src, hit_box }) {
+
+        const img = new Image()
+
+        img.src = "./adventurer-idle-00.png"
 
         const pixel = this.pixel
 
@@ -21,8 +25,9 @@ export class Entities extends Blocks {
         const newX = dx * pixel
         const newY = dy * pixel
 
-        ctx.fillStyle = "red"; 
-        ctx.fillRect(newX - 10, newY, pixel_x, pixel_y); 
+        img.onload = function() {
+            ctx.drawImage(img,newX, newY, hit_box.width, hit_box.height);
+        }
 
     }
 
@@ -30,74 +35,87 @@ export class Entities extends Blocks {
 
         const ctx = this.ctx
 
-        const skin = this.enties_variants[entity]
+        const { name, id } = entity
 
-        const { position } = this.entities[entity]
+        const { hit_box } = this.enties_variants[name]
 
-        for (let y = 0; y < skin.length; y++) {
+        const { position } = this.entities[name][id]
 
-            const pieces = skin[y]
+        for (let y = 0; y < hit_box.y; y++) {
 
-            for (let x = 0; x < pieces.length; x++) {
-
-                const { pixel_x, pixel_y = 25 } = pieces[x]
+            for (let x = 0; x < hit_box.x; x++) {
 
                 const newX = (position.x + x) * this.pixel
                 const newY = (position.y + y) * this.pixel
 
-                this.matriz[position.y + y][position.x + x] = 0
+                
+                if (hit_box.y == y + 1) {
+                    console.log("F")
+                    ctx.clearRect(newX, newY, hit_box.width, hit_box.height)
+                }
 
-                ctx.clearRect(newX - 10, newY, pixel_x, pixel_y)
+                this.matriz[position.y + y][position.x + x] = 0
             }
         }
     }
 
-     moveEntity({ entity, dx = 0, dy = 0, direction = "rigth" }) {
+    moveEntity({ entity, dx = 0, dy = 0, action = "idle" }) {
 
-        const skin = this.enties_variants[entity]
 
-        const entityActually = this.entities[entity]
+        const { name, id } = entity
+
+        const { hit_box, animations } = this.enties_variants[name]
+
+        const entityActually = this.entities[name][id]
 
         this.drawEntityRemove({ entity })
 
-        const { x = 0, y = 0 } = entityActually.position
+        const { position } = entityActually
 
-        for (let i = 0; i < skin.length; i++) {
+        for (let y = 0; y < hit_box.y; y++) {
 
-            const pieces = skin[i]
+            for (let x = 0; x < hit_box.x; x++) {
 
-            for (let j = 0; j < pieces.length; j++) {
+                const newX = dx + x + position.x
 
-                const { src, pixel_x, pixel_y = 25 } = pieces[j]
+                const newY = dy + y + position.y
 
-                const newX = dx + x + j
+                if (hit_box.y == y + 1) {
+                    this.drawEntity({ dx: newX, dy: newY, src: animations[action], hit_box })
+                }
 
-                const newY = dy + y + i
-
-                 this.drawEntity({ dx: newX, dy: newY, src, pixel_x, pixel_y })
-
-                this.matriz[newY][newX] = { name: entity, id: entity }
+                this.matriz[newY][newX] = entity
             }
         }
 
-        entityActually.position["x"] = dx + x
-        entityActually.position["y"] = dy + y
-        entityActually.position.direction = direction
+        entityActually.position["x"] = dx + position.x
+        entityActually.position["y"] = dy + position.y
+        entityActually.position.action = action
     }
 
 
     generateEntity(entity) {
 
+        const id_generate = `${entity}:1`
+
         const property_defaults = {
-            stats: {
-                health: 100, armor: 0, level: 0
-            },
-            position: { jumping: false, direction: "rigth", x: 0, y: 0 }
+            [id_generate]: {
+                stats: {
+                    health: 100, armor: 0, level: 0
+                },
+                position: {
+                    action: "idle",
+                    stage_animation: 0,
+                    x: 0,
+                    y: 0
+                }
+            }
+
         }
 
-        this.entities[entity] = property_defaults
+        this.entities[entity] = { ...this.entities[entity], ...property_defaults }
 
-        this.moveEntity({ entity, dy: 12 })
+        this.moveEntity({ entity: { name: entity, id: id_generate }, dy: 9, dx: 0 })
 
     }
 

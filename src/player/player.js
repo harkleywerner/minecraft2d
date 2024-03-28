@@ -27,11 +27,13 @@ export class Player extends Entities {
     updateFrame() {
         const frameUpdate = () => {
 
+            const entity = { name: "player", id: "player:1" }
+
             this.keysEvents.forEach(key => {
                 if (key === "d") {
-                    this.moveEntity({ entity: "male", dx: this.moveSpeed, direction: "rigth" });
+                    this.moveEntity({ entity, dx: this.moveSpeed, action: "run" });
                 } else if (key === "a") {
-                    this.moveEntity({ entity: "male", dx: -this.moveSpeed, direction: "left" });
+                    this.moveEntity({ entity, dx: -this.moveSpeed, action: "run" });
                 } else if (key === " ") {
                     // this.jump();
                 }
@@ -47,5 +49,5 @@ const init = new Player()
 
 init.generateMatriz()
 init.generateBlock()
-init.generateEntity("male")
+init.generateEntity("player")
 init.moveToKeyboard()
