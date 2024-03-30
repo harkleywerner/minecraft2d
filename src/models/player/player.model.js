@@ -40,16 +40,15 @@ export const playerModel = () => {
 
     const fall = [
         "src/models/player/fall/adventurer-fall-00.png",
-        "src/models/player/fall/adventurer-fall-01.png",
     ]
 
 
     return {
         hit_box: {
-            x: 2,
+            x: 1,
             y: 2,
             height: 70,
-            width: 70
+            width: 35
         },
         frames: {
             run,
@@ -60,10 +59,7 @@ export const playerModel = () => {
             fall
         },
         actions_coldown: {
-            "run": 0,
-            "idle": 0,
             "attack": 700,
-            "jump" : 0
         }
     }
 
