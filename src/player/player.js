@@ -8,23 +8,41 @@ export class Player extends Blocks {
         this.moveSpeed = 1
     }
 
-
     moveToKeyboard() {
 
-        setInterval(() => {
-            console.log("FF")
-            this.moveEntity({ entity : { name: "player", id: "player:1" }, dx: 0, action: "idle" });
-        }, 700);
+        const keyList = {
+            d: "run",
+            a: "run",
+            f: "attack"
+        }
+
+        const entity = { name: "player", id: "player:1" }
+
+        const verificationEntity = (key) => {
+            const { actions_execution_time, skill_active } = this.entities["player"]["player:1"]
+
+            return actions_execution_time[keyList[key]] >= Date.now() || skill_active
+        }
+
 
         window.addEventListener("keydown", (e) => {
+
+            
+            if(verificationEntity(e.key)) return
+
+            this.entityIdle({ entity, idle: false })
+
             this.keysEvents.add(e.key)
+
             this.updateFrame()
-
-
         })
 
         window.addEventListener("keyup", (e) => {
             this.keysEvents.delete(e.key)
+
+            if(verificationEntity(e.key)) return
+
+            this.entityIdle({ entity, idle: true })
             this.updateFrame()
         })
     }
@@ -34,15 +52,15 @@ export class Player extends Blocks {
 
             const entity = { name: "player", id: "player:1" }
 
-          
-
             this.keysEvents.forEach(key => {
                 if (key === "d") {
-                    this.moveEntity({ entity, dx: this.moveSpeed, action: "run" });
+                    this.moveEntity({ entity, dx: this.moveSpeed, action: "run", direction: "rigth" });
                 } else if (key === "a") {
-                    this.moveEntity({ entity, dx: -this.moveSpeed, action: "run" });
+                    this.moveEntity({ entity, dx: -this.moveSpeed, action: "run", direction: "left" });
                 } else if (key === " ") {
                     // this.jump();
+                } else if (key == "f") {
+                    this.entityAttack({ action: "attack", entity })
                 }
             });
 
@@ -59,4 +77,7 @@ const init = new Player();
     init.generateEntity("player")
     init.generateBlock()
     init.moveToKeyboard()
+    init.generateBlock2()
+    console.log(init.matriz)
+
 })()

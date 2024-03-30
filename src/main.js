@@ -37,15 +37,15 @@ export class MapGame {
 
             const entityLoader = loader()
 
-            const animations = entityLoader.animations
+            const frames = entityLoader.frames
 
             this.models[entity] = {...entityLoader} //=> Inicializa la entidad.
 
-            for (const key in animations) {
+            for (const key in frames) {
 
                 const loader_images = []
 
-                const currentList = animations[key]
+                const currentList = frames[key]
 
                 for (let i = 0; i < currentList.length; i++) {
 
@@ -63,7 +63,7 @@ export class MapGame {
                     })
                 }
 
-                this.models[entity]["animations"][key] = loader_images
+                this.models[entity]["frames"][key] = loader_images
             }
         }
 

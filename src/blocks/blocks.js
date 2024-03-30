@@ -17,9 +17,9 @@ export class Blocks extends Entities { //=> Durability 1-6
 
             const block = this.blocks[obj]
 
-            const { animations, hit_box } = this.models["blocks"]
+            const { frames, hit_box } = this.models["blocks"]
 
-            const { floor, stats, name } = block
+            const { floor, name } = block
 
             const { min_floor, max_floor } = floor
 
@@ -33,13 +33,24 @@ export class Blocks extends Entities { //=> Durability 1-6
 
                 for (let j = 0; j < floor.length; j++) {
 
-                    this.matriz[floorRange[i]][j] = { ...stats, health: 100, id: obj, name: name }
+                    this.matriz[floorRange[i]][j] = { type: "block", name: name }
 
-                    this.drawEntity({ dx: j, dy: floorRange[i], hit_box,img : animations[obj][0] })
+                    this.drawEntity({ dx: j, dy: floorRange[i], hit_box, img: frames[obj][0] })
 
                 }
             }
         }
+
     }
+
+    generateBlock2() {
+
+        const { frames, hit_box } = this.models["blocks"]
+
+        this.matriz[13][10] = { name: "grass", type: "block" }
+        this.drawEntity({ dx : 10, dy : 13, hit_box, img: frames["grass"][0] })
+    }
+
+
 
 }

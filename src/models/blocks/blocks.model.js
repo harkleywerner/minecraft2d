@@ -7,7 +7,7 @@ export const blocksModel = () => {
             height: 25,
             width: 25
         },
-        animations: {
+        frames: {
             grass: ["src/models/blocks/dirt_grass.png"],
             stone: ["src/models/blocks/stone.png"],
             dirt: ["src/models/blocks/dirt.png"]
