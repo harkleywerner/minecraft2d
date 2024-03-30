@@ -48,7 +48,9 @@ export class Blocks extends Entities { //=> Durability 1-6
         const { frames, hit_box } = this.models["blocks"]
 
         this.matriz[13][10] = { name: "grass", type: "block" }
+        this.matriz[8][2] = { name: "grass", type: "block" }
         this.drawEntity({ dx : 10, dy : 13, hit_box, img: frames["grass"][0] })
+        this.drawEntity({ dx : 2, dy : 8, hit_box, img: frames["grass"][0] })
     }
 
 

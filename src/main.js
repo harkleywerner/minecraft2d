@@ -5,8 +5,8 @@ export class MapGame {
     constructor() {
         this.ctx = document.getElementById("cavans").getContext("2d")
         this.max_width = 1500
-        this.max_heigth = 500
-        this.pixel = 25
+        this.max_heigth = 700
+        this.pixel = 35
         this.matriz = []
         this.models = {}
     }
@@ -15,12 +15,13 @@ export class MapGame {
 
         const pixel = this.pixel
 
-        const heigth = this.max_heigth / pixel
-        const width = this.max_width / pixel
+        const heigth = Math.round(this.max_heigth / pixel)
+        const width = Math.round(this.max_width / pixel)
 
         this.matriz = Array.from({ length: heigth },
             () => Array.from({ length: width }, () => 0)
         )
+
     }
 
 

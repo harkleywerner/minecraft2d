@@ -19,16 +19,16 @@ export class Player extends Blocks {
         const entity = { name: "player", id: "player:1" }
 
         const verificationEntity = (key) => {
-            const { actions_execution_time, skill_active } = this.entities["player"]["player:1"]
+            const { actions_execution_time, attack_active } = this.entities["player"]["player:1"]
 
-            return actions_execution_time[keyList[key]] >= Date.now() || skill_active
+            return actions_execution_time[keyList[key]] >= Date.now() || attack_active
         }
 
 
         window.addEventListener("keydown", (e) => {
 
-            
-            if(verificationEntity(e.key)) return
+
+            if (verificationEntity(e.key)) return
 
             this.entityIdle({ entity, idle: false })
 
@@ -40,7 +40,7 @@ export class Player extends Blocks {
         window.addEventListener("keyup", (e) => {
             this.keysEvents.delete(e.key)
 
-            if(verificationEntity(e.key)) return
+            if (verificationEntity(e.key)) return
 
             this.entityIdle({ entity, idle: true })
             this.updateFrame()
@@ -54,13 +54,15 @@ export class Player extends Blocks {
 
             this.keysEvents.forEach(key => {
                 if (key === "d") {
-                    this.moveEntity({ entity, dx: this.moveSpeed, action: "run", direction: "rigth" });
+                    this.entityMoventAction({ action: "run", entity,dx : this.moveSpeed })
                 } else if (key === "a") {
-                    this.moveEntity({ entity, dx: -this.moveSpeed, action: "run", direction: "left" });
+                    this.entityMoventAction({ action: "run", entity,dx : -this.moveSpeed})
                 } else if (key === " ") {
-                    // this.jump();
+                    this.entityMoventAction({ action: "jump", entity,dy : -1 })
                 } else if (key == "f") {
-                    this.entityAttack({ action: "attack", entity })
+                    this.entityAttackAction({ action: "attack", entity })
+                }else if(key == "s"){
+                    this.moveEntity({entity,dy : 1,action : "idle"})
                 }
             });
 

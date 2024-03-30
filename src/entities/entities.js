@@ -22,7 +22,6 @@ export class Entities extends MapGame {
             ctx.drawImage(img, flippedX, newY, hit_box.width, hit_box.height);
             ctx.restore();
         } else {
-
             ctx.drawImage(img, newX, newY, hit_box.width, hit_box.height);
         }
     }
@@ -44,7 +43,8 @@ export class Entities extends MapGame {
                 const newX = (position.x + x) * this.pixel
                 const newY = (position.y + y) * this.pixel
 
-                if (y == 0) {
+                if (y == 0 && x == 0) {
+
                     ctx.clearRect(newX, newY, hit_box.width, hit_box.height)
                 }
 
@@ -87,11 +87,13 @@ export class Entities extends MapGame {
 
         const currentframes = frames[action]
 
-        this.drawEntityRemove({ entity })
+        const detection = this.detectCollision({ entity, dx, dy })
 
         this.setStageFrames({ entity, action })
 
-        this.detectCollision({ entity, dx, dy, direction: currentDirection })
+        if (detection) return detection
+
+        this.drawEntityRemove({ entity })
 
         for (let y = 0; y < hit_box.y; y++) {
 
@@ -101,7 +103,7 @@ export class Entities extends MapGame {
 
                 const newY = dy + y + position.y
 
-                if (y == 0) { //=> Solo se dibuja del pixel mas alto para abajo
+                if (y == 0 && x == 0) { //=> Solo se dibuja del pixel mas alto para abajo
                     this.drawEntity({
                         dx: newX,
                         dy: newY,
@@ -114,12 +116,27 @@ export class Entities extends MapGame {
                 this.matriz[newY][newX] = entity
             }
         }
+
         currentEntity.position["x"] = dx + position.x
         currentEntity.position["y"] = dy + position.y
         currentEntity.position.direction = currentDirection
+
+    }
+    entityGravity({entity}){
+        
+        const interval = setInterval(() => {
+            
+            const collision = this.moveEntity({entity,dy : 1,action : "fall"})
+
+            if(collision) {
+                clearInterval(interval)
+                this.moveEntity({entity})
+            }
+
+        }, 200);
     }
 
-    detectCollision({ entity, dx, dy, direction }) {
+    detectCollision({ entity, dx, dy }) {
 
         const { name, id } = entity
 
@@ -127,7 +144,7 @@ export class Entities extends MapGame {
 
         const { position } = this.entities[name][id]
 
-        console.log(position)
+
         for (let y = 0; y < hit_box.y; y++) {
 
             for (let x = 0; x < hit_box.x; x++) {
@@ -135,7 +152,9 @@ export class Entities extends MapGame {
                 const newX = Math.round(x + dx + position.x)
                 const newY = Math.round(y + dy + position.y)
 
-                console.log(this.matriz[newY][newX])
+                const object = this.matriz[newY][newX]
+
+                if (object && object.name != name) return object
             }
         }
 
@@ -162,7 +181,7 @@ export class Entities extends MapGame {
 
             this.entities[name][id]["interval"] = idle()
         }
-        
+
     }
 
     generateEntity(entity) {
@@ -182,7 +201,7 @@ export class Entities extends MapGame {
                     x: 0,
                     y: 0
                 },
-                skill_active: false,
+                attack_active: false,
                 drawn: false,
                 actions_execution_time: {}
             }
@@ -196,7 +215,35 @@ export class Entities extends MapGame {
 
     }
 
-    entityAttack({ action, entity }) { //=> Ataques y skills se manejan de la misma forma.
+    entityMoventAction({ entity, dy = 0, dx = 0, action }) {
+
+        const { id, name } = entity
+
+        const currentModel = this.models[name]
+
+        const currentEntity = this.entities[name][id]
+
+        const position = currentEntity.position
+
+        currentEntity.attack_active = true
+        
+        let countdown = 0
+
+        const interval = setInterval(() => {
+
+            if (countdown >= dy || countdown >= dx) {
+                currentEntity.attack_active = false
+                this.entityGravity({entity})
+                return clearInterval(interval)
+            }
+            countdown += 1
+
+            this.moveEntity({ entity, dy, dx, action })
+
+        }, 50);
+    }
+
+    entityAttackAction({ action, entity }) { //=> Ataques y skills se manejan de la misma forma.
 
         const { id, name } = entity
 
@@ -214,7 +261,7 @@ export class Entities extends MapGame {
 
         currentEntity.actions_execution_time[action] = Date.now() + coldownAction
 
-        currentEntity.skill_active = true
+        currentEntity.attack_active = true
 
         currentEntity.drawn = true
 
@@ -224,7 +271,7 @@ export class Entities extends MapGame {
 
             if (countdown <= 0) {
                 this.entityIdle({ entity: entity, idle: true })
-                currentEntity.skill_active = false
+                currentEntity.attack_active = false
                 clearInterval(interval)
             }
 
@@ -234,39 +281,5 @@ export class Entities extends MapGame {
 
         }, 50)
 
-    }
-
-    jump({ entity }) {
-
-        // const { jumping } = this.entities[entity]
-
-        // if (jumping) return
-
-        // this.entities[entity]["jumping"] = true
-
-        // const duration = 1000
-
-        // const startTime = performance.now()
-
-        // const animate = (currentTime) => {
-
-        //     const elapsedTime = currentTime - startTime
-        //     const progress = elapsedTime / duration
-        //     const gravity = elapsedTime < 500 ? - 1 : +1
-
-        //     const newY = this.dy + gravity
-
-        //     this.lienzo({ dy: newY });
-
-        //     this.dy = newY
-
-        //     if (progress < 1) {
-        //         requestframesFrame(animate)
-        //     } else {
-        //         this.entities[entity]["jumping"] = false
-        //     }
-        // }
-
-        // requestframesFrame(animate)
     }
 }

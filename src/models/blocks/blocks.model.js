@@ -4,8 +4,8 @@ export const blocksModel = () => {
         hit_box: {
             x: 1,
             y: 1,
-            height: 25,
-            width: 25
+            height: 35,
+            width: 35
         },
         frames: {
             grass: ["src/models/blocks/dirt_grass.png"],

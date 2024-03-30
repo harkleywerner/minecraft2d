@@ -31,24 +31,39 @@ export const playerModel = () => {
         "src/Models/Player/idleAttack/adventurer-idle-2-03.png"
     ]
 
+    const jump = [
+        "src/models/player/jump/adventurer-jump-00.png",
+        "src/models/player/jump/adventurer-jump-01.png",
+        "src/models/player/jump/adventurer-jump-02.png",
+        "src/models/player/jump/adventurer-jump-03.png",
+    ]
+
+    const fall = [
+        "src/models/player/fall/adventurer-fall-00.png",
+        "src/models/player/fall/adventurer-fall-01.png",
+    ]
+
 
     return {
         hit_box: {
-            x: 1,
+            x: 2,
             y: 2,
-            height: 50,
-            width: 75
+            height: 70,
+            width: 70
         },
         frames: {
             run,
             idle,
             attack,
-            idleAttack
+            idleAttack,
+            jump,
+            fall
         },
         actions_coldown: {
             "run": 0,
             "idle": 0,
-            "attack": 1000
+            "attack": 700,
+            "jump" : 0
         }
     }
 
