@@ -5,8 +5,8 @@ export class Entities extends MapGame {
     constructor() {
         super()
         this.entities = {} //Aca se guardan todas las entidades generadas
+        this.test = false;
     }
-
 
     drawEntity({
         entity,
@@ -25,8 +25,8 @@ export class Entities extends MapGame {
 
         const img = currentFrame[position.action.stage_frames]
         const pixel = this.pixel
-        const newX = (position.x) * pixel
-        const newY = (position.y) * pixel
+        const newX = (Math.round(position.x)) * pixel
+        const newY = (Math.round(position.y)) * pixel
 
         if (position.direction == "left") {
             const flippedX = -newX - hit_box.width
@@ -52,8 +52,8 @@ export class Entities extends MapGame {
 
         const { position } = this.entities[name][id]
 
-        const newX = (position.x) * this.pixel
-        const newY = (position.y) * this.pixel
+        const newX = (Math.round(position.x)) * this.pixel
+        const newY = (Math.round(position.y)) * this.pixel
 
         ctx.clearRect(newX, newY, hit_box.width, hit_box.height)
 
@@ -94,9 +94,7 @@ export class Entities extends MapGame {
                 const newY = position.y + y
 
                 this.matriz[newY][newX] = 0
-
             }
-
         }
     }
 
@@ -105,8 +103,6 @@ export class Entities extends MapGame {
         const { name, id } = entity
 
         const colission = this.detectCollision({ dx, dy, entity })
-
-        const currentAction = colission && action == "fall" ? "idle" : action
 
         const { hit_box } = this.models[name]
 
@@ -118,8 +114,7 @@ export class Entities extends MapGame {
 
         !colission && this.clearMoveEntity({ entity })
 
-        this.setStageFrames({ entity, action: currentAction })
-
+        this.setStageFrames({ entity, action: action })
 
         for (let y = 0; y < hit_box.y; y++) {
 
@@ -127,7 +122,6 @@ export class Entities extends MapGame {
 
                 const newX = Math.floor(x + dx + position.x)
                 const newY = Math.floor(y + dy + position.y)
-
 
                 if (!colission) {
                     this.matriz[newY][newX] = entity
@@ -145,18 +139,21 @@ export class Entities extends MapGame {
         currentEntity.position["x"] = newPositionX
         currentEntity.position["y"] = newPositionY
 
-        this.drawEntity({ entity, action: currentAction })
+        this.drawEntity({ entity, action: action })
+
         if (colission) return colission
-        if (this.matriz[newPositionY + 2][newPositionX] == 0) {
 
-           this.moveEntity({ entity, dy: 1, action: "fall" })
+        if (this.matriz[newPositionY + 2][newPositionX] == 0 && !currentEntity.fallin && !currentEntity.god_mode) {
+            currentEntity.isGrounded = false
             this.entityGravity({ entity, dx, dy })
+        } else if (this.matriz[newPositionY + 2][newPositionX] !== 0) {
+            currentEntity.isGrounded = true
+        } else if (this.matriz[newPositionY + 2][newPositionX] == 0 && currentEntity.god_mode) {
+            currentEntity.isGrounded = false
         }
-
-
     }
 
-    detectCollision({ entity, dx, dy }) {
+    detectCollision({ entity, dx = 0, dy = 0 }) {
 
         const { name, id } = entity
 
@@ -196,11 +193,13 @@ export class Entities extends MapGame {
 
         currentEntity.fallin = true
 
+        this.moveEntity({ entity, dy: 1, action: "fall" })
+
         const interval = setInterval(() => {
 
             const collision = this.moveEntity({ entity, dy: 1, action: "fall" })
 
-            if (collision) {
+            if (collision || currentEntity.god_mode) {
                 currentEntity.fallin = false
                 clearInterval(interval)
                 this.entityIdle({ entity, idle: true })
@@ -210,13 +209,26 @@ export class Entities extends MapGame {
     }
 
 
+    entityGodMode({ entity }) {
+
+        const { id, name } = entity
+
+        const currentEntity = this.entities[name][id]
+
+        currentEntity.god_mode = !currentEntity.god_mode
+
+        const dy = currentEntity.god_mode ? -1 : 0
+
+        this.moveEntity({ entity, dy })
+
+    }
 
 
-    generateEntity(entity) {
+    generateEntity(entity, dx = 0) {
 
         const id_generate = `${entity}:1`
 
-        const currentEntity = { name: entity, id: id_generate }
+        const currentEntity = { name: entity, id: id_generate, type: "mob" }
 
         const property_defaults = {
             [id_generate]: {
@@ -232,14 +244,16 @@ export class Entities extends MapGame {
                 jump: false,
                 fallin: false,
                 attack_active: false,
-                drawn: true,
-                actions_execution_time: {}
+                drawn: false,
+                actions_execution_time: {},
+                isGrounded: false,
+                god_mode: false
             }
         }
 
         this.entities[entity] = { ...this.entities[entity], ...property_defaults }
 
-        this.moveEntity({ entity: currentEntity, dy: 14, dx: 0 })
+        this.moveEntity({ entity: currentEntity, dy: 13, dx })
 
         this.entityIdle({ entity: currentEntity, idle: true })
 
@@ -310,12 +324,11 @@ export class Entities extends MapGame {
 
         let action = "run"
 
-        // console.log(fallin,jump)
-        // if (fallin) {
-        //     action = "fall"
-        // }else if (jump) {
-        //     action = "jump"
-        // }
+        if (fallin) {
+            action = "fall"
+        } else if (jump) {
+            action = "jump"
+        }
 
         this.moveEntity({ action, dx, direction, entity })
 
@@ -334,6 +347,7 @@ export class Entities extends MapGame {
 
     }
 
+
     entityAttack({ action, entity }) { //=> Ataques y skills se manejan de la misma forma.
 
         const { id, name } = entity
@@ -348,6 +362,8 @@ export class Entities extends MapGame {
 
         const currentTime = currentEntity.actions_execution_time[action] > Date.now()
 
+        const rangeAttack = 3
+
         if (currentTime || currentEntity.jump) return
 
         currentEntity.actions_execution_time[action] = Date.now() + coldownAction
@@ -358,20 +374,52 @@ export class Entities extends MapGame {
 
         let countdown = frames.length - 1
 
+        const startAttack = (count = 0) => {
+
+            if (count >= rangeAttack) return
+
+            const currentDirection = currentEntity.position.direction == "rigth"
+
+            const collision = this.detectCollision({ dx: currentDirection ? count : -count, entity })
+
+            if (collision && collision?.type == "mob") {
+
+                const { name, id } = collision
+
+                const entityCurrentAttack = this.entities[name][id]
+
+                entityCurrentAttack.stats.health -= 100
+
+                if (entityCurrentAttack.stats.health <= 0) {
+                    this.entityIdle({ entity: collision, idle: false })
+                    this.clearMoveEntity({ entity: collision })
+                    this.drawEntityRemove({ entity: collision })
+                    return
+                }
+
+            }
+
+            startAttack(count + 1)
+        }
+
+
+
         const interval = setInterval(() => {
 
             if (countdown <= 0) {
                 currentEntity.attack_active = false
                 this.entityIdle({ entity: entity, idle: true })
+                startAttack()
                 clearInterval(interval)
             }
-
             countdown -= 1
             this.drawEntityRemove({ entity })
             this.setStageFrames({ entity, action: action })
             this.drawEntity({ action: "attack", entity })
 
         }, 50)
+
+
 
     }
 }

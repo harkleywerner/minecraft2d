@@ -11,23 +11,24 @@ export class Player extends Blocks {
     moveToKeyboard() {
 
         const keyListColdown = {
-            "f" : "attack",
+            "f": "attack",
         }
 
         const entity = { name: "player", id: "player:1" }
 
         window.addEventListener("keydown", (e) => {
 
-            // console.log(this.entities["player"]["player:1"].position.x)
-
-            if(this.entityColdown({entity,action : keyListColdown[e.key]})){
+            if (this.entityColdown({ entity, action: keyListColdown[e.key] })) {
                 return
             }
+            else if (this.entities["player"]["player:1"].isGrounded && e.key == "s" && this.entities["player"]["player:1"].god_mode) {
+                return this.entityIdle({ entity, idle: true })
+            }
+            else if (this.entities["player"]["player:1"].isGrounded && e.key == "s") return
 
+            this.entityIdle({ entity, idle: false })
             this.keysEvents.add(e.key)
             this.updateFrame()
-            this.entityIdle({ entity, idle: false })
-
         })
 
         window.addEventListener("keyup", (e) => {
@@ -36,24 +37,30 @@ export class Player extends Blocks {
             this.entityIdle({ entity, idle: true })
             this.updateFrame()
         })
+
     }
 
     updateFrame() {
         const frameUpdate = () => {
 
             const entity = { name: "player", id: "player:1" }
-
             this.keysEvents.forEach(key => {
                 if (key === "d") {
                     this.entityRun({ entity, dx: this.moveSpeed, direction: "rigth" })
                 } else if (key === "a") {
                     this.entityRun({ entity, dx: -this.moveSpeed, direction: "left" })
                 } else if (key === " ") {
-                    this.entityJump({ action: "jump", entity, dy: -2 })
+                    this.entityJump({ action: "jump", entity, dy: -5, })
                 } else if (key === "f") {
                     this.entityAttack({ action: "attack", entity })
                 } else if (key === "s") {
                     this.moveEntity({ entity, dy: 1, action: "fall" })
+                } else if (key === "w") {
+                    this.moveEntity({ entity, dy: -1, action: "idle" })
+                } else if (key === "p") {
+                    this.entityGodMode({ entity })
+                }else if(key === "Escape"){
+                    init.generateEntity("bat",2 )
                 }
             });
 
@@ -68,7 +75,9 @@ const init = new Player();
     await init.loadAllImg()
     init.generateMatriz()
     init.generateBlock()
-    init.generateEntity("player")
+    init.generateEntity("player",3)
+    init.generateEntity("bat",2 )
     init.moveToKeyboard()
     init.generateBlock2()
+
 })()

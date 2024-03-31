@@ -1,4 +1,5 @@
 import { blocksModel } from "./models/blocks/blocks.model.js"
+import { batModel } from "./models/mobs/bat/bat.model.js"
 import { playerModel } from "./models/player/player.model.js"
 
 export class MapGame {
@@ -29,7 +30,8 @@ export class MapGame {
 
         const loaders = [
             { entity: "player", loader: playerModel },
-            { entity : "blocks", loader : blocksModel}
+            { entity: "blocks", loader: blocksModel },
+            { entity: "bat", loader: batModel }
         ]
 
         for (const e of loaders) {
@@ -40,7 +42,7 @@ export class MapGame {
 
             const frames = entityLoader.frames
 
-            this.models[entity] = {...entityLoader} //=> Inicializa la entidad.
+            this.models[entity] = { ...entityLoader } //=> Inicializa la entidad.
 
             for (const key in frames) {
 

@@ -44,12 +44,9 @@ export class Blocks extends Entities { //=> Durability 1-6
 
                 for (let x = 0; x < floor.length; x++) {
 
-                  
-                    if((x !== 4) && (floorRange[y] !== 15) && x !== 3 ){
                     this.matriz[floorRange[y]][x] = { type: "block", name: name }
                     
                     this.drawBlock({ dx: x, dy: floorRange[y] , name : obj })
-                    }
 
                 }
             }
@@ -62,6 +59,12 @@ export class Blocks extends Entities { //=> Durability 1-6
         this.matriz[14][9] = { name: "stone", type: "block" }
         this.drawBlock({ dx : 9, dy : 14, name : "stone" })
 
+        this.matriz[13][7] = { name: "stone", type: "block" }
+        this.drawBlock({ dx : 7, dy :13, name : "stone" })
+
+        this.matriz[15][3] = { name: "stone", type: "block" }
+        this.drawBlock({ dx : 3, dy :15, name : "stone" })
+
         this.matriz[14][10] = { name: "stone", type: "block" }
         this.drawBlock({ dx : 10, dy : 14, name : "stone" })
 
@@ -71,14 +74,11 @@ export class Blocks extends Entities { //=> Durability 1-6
         this.matriz[14][12] = { name: "stone", type: "block" }
         this.drawBlock({ dx : 12, dy : 14, name : "stone" })
 
-        this.matriz[4][15] = 0
-       
-
         this.matriz[13][10] = { name: "grass", type: "block" }
         this.drawBlock({ dx : 10, dy : 13, name : "grass" })
 
-        this.matriz[10][0] = { name: "stone", type: "stone" }
-        this.drawBlock({ dx : 0, dy : 10, name : "stone" })
+        // this.matriz[10][0] = { name: "stone", type: "stone" }
+        // this.drawBlock({ dx : 0, dy : 10, name : "stone" })
 
         this.matriz[8][2] = { name: "grass", type: "block" }
         this.drawBlock({ dx : 2, dy : 8, name : "grass" })
