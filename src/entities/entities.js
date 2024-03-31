@@ -225,8 +225,11 @@ export class Entities extends MapGame {
 
 
     generateEntity(entity, dx = 0) {
+        
 
-        const id_generate = `${entity}:1`
+        const entityCount = Object.keys(this.entities[entity] || {})
+
+        const id_generate = `${entity}:${entityCount.length}`
 
         const currentEntity = { name: entity, id: id_generate, type: "mob" }
 

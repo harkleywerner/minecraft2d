@@ -14,17 +14,17 @@ export class Player extends Blocks {
             "f": "attack",
         }
 
-        const entity = { name: "player", id: "player:1" }
+        const entity = { name: "player", id: "player:0" }
 
         window.addEventListener("keydown", (e) => {
 
             if (this.entityColdown({ entity, action: keyListColdown[e.key] })) {
                 return
             }
-            else if (this.entities["player"]["player:1"].isGrounded && e.key == "s" && this.entities["player"]["player:1"].god_mode) {
+            else if (this.entities["player"]["player:0"].isGrounded && e.key == "s" && this.entities["player"]["player:0"].god_mode) {
                 return this.entityIdle({ entity, idle: true })
             }
-            else if (this.entities["player"]["player:1"].isGrounded && e.key == "s") return
+            else if (this.entities["player"]["player:0"].isGrounded && e.key == "s") return
 
             this.entityIdle({ entity, idle: false })
             this.keysEvents.add(e.key)
@@ -43,7 +43,7 @@ export class Player extends Blocks {
     updateFrame() {
         const frameUpdate = () => {
 
-            const entity = { name: "player", id: "player:1" }
+            const entity = { name: "player", id: "player:0" }
             this.keysEvents.forEach(key => {
                 if (key === "d") {
                     this.entityRun({ entity, dx: this.moveSpeed, direction: "rigth" })
@@ -61,6 +61,7 @@ export class Player extends Blocks {
                     this.entityGodMode({ entity })
                 }else if(key === "Escape"){
                     init.generateEntity("bat",2 )
+                    init.generateEntity("bat",8 )
                 }
             });
 
@@ -76,7 +77,6 @@ const init = new Player();
     init.generateMatriz()
     init.generateBlock()
     init.generateEntity("player",3)
-    init.generateEntity("bat",2 )
     init.moveToKeyboard()
     init.generateBlock2()
 
