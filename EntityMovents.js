@@ -6,26 +6,27 @@ export default class EntityMovents extends Entity {
     }
     jumpEntity({ dy = 0 }) {
 
-
-
+      
         if (this.jump) return
-        else if(!this.collisionCheck({ dy: 24 })) return
+        else if (this.collisionCheck({ dy: -24 })) return //=> Verifica si hay algun objecto arriba
+        else if (!this.collisionCheck({ dy: 24 }) && !this.fly) return //=> Verifica si no esta cayendo.
 
         this.jump = true
 
         const total = this.y + dy
 
+        
         let perfomance = performance.now()
 
         const jump = (currentTime = 0) => {
 
             const elapsedTime = currentTime - perfomance
 
-            if (elapsedTime >= 70) {
+            if (elapsedTime >= 30) {
 
                 perfomance = currentTime;
 
-                const check = this.entityCheck({ dy: dy / 2 })
+                const check = this.entityCheck({ dy: dy / 6 })
 
                 if (check || this.y <= total) return this.jump = false
             }

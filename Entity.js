@@ -6,13 +6,12 @@ export default class Entity {
         this.y = 0
         this.width = 24
         this.heigth = 24
-        this.id = Math.random() * 200
+        this.id = Math.random()
         this.name = "entity"
         this.hit_box = {
             x: 1,
             y: 1
         }
-        this.fallin = false
         this.moventSpeed = 6
     }
 
@@ -69,24 +68,59 @@ export default class Entity {
         }
     }
 
+    a() {
+        this.entityCheck({ dx: -12 })
+    }
+
     entityCheck({ dx = 0, dy = 0 } = {}) {
 
-        if(this.pause) return
+        if (this.pause) return
 
         const colission = this.collisionCheck({ dx, dy })
+
+
         if (colission) {
+            const newY = (colission.y || this.y) - this.y
+            const newX = (colission.x || this.x) - this.x
+
+            if ((newY - this.heigth) > 0) {
+                this.y += newY - this.heigth
+            } else if ((this.y + dy) < 0) {
+                this.y = 0
+            } else if ((dx + this.x) < 0) {
+                this.x = 0
+            }
+            else if (newX !== 0) {
+             
+                const A = this.width + dx + this.x
+                const B = colission.x  + colission.width
+
+
+                this.x += (B - A)
+            } else if (newY < 0 && newX == 0) {
+                this.y = colission.y + colission.heigth
+            }
+
             return colission
         }
         else {
             this.removeEntity()
             this.moveEntity({ dx, dy })
-            this.y += dy
+
+            const comprobateY = (this.y + dy) > (this.map.heigth - this.heigth)
+
+            if (comprobateY) {
+                this.y = this.map.heigth - this.heigth
+            } else {
+                this.y += dy
+            }
+
             this.x += dx
         }
-
     }
 
     gravityEntity() {
+
         this.entityCheck({ dy: 24 })
     }
 
@@ -101,48 +135,17 @@ export default class Entity {
 
         const matriz = this.map.matriz
 
-        const validationFourSides = ({ newX, newY }) => {
+        const colissionCords = (element) => {
 
-            const coords = [ // 0 => redondeo minimo, 1 => redondeo maximo
-                { x: 0, y: 0 },
-                { x: 1, y: 0 },
-                { x: 0, y: 1 },
-                { x: 1, y: 1 }
-            ]
+            if (!element) return
 
-            for (const i of coords) {
+            const { x, y, width, heigth } = element
 
-                const { x, y } = i
+            const A = (this.x + dx) < x + width && (this.x + dx) + this.width > x
+            const B = (this.y + dy) < y + heigth && (this.y + dy) + this.heigth > y
 
-                const sideX = x == 0 ? Math.floor(newX) : Math.ceil(newX)
-                const sideY = y == 0 ? Math.floor(newY) : Math.ceil(newY)
-
-                const testX = x == 0 ? Math.floor(newX - 0.5) : Math.ceil(newX - 0.5)
-                // const testY = y == 0 ? Math.floor(newY - 0.5) : Math.ceil(newY - 0.5)
-
-                if (sideX < 0 || sideY < 0 || sideX > (matriz[0].length - 1) || sideY > (matriz.length - 1)) {
-                    return []
-                }
-
-                const matrizY = matriz[sideY] || []
-
-                const filtrado = (matrizY[sideX] || []).filter(i => i.id !== this.id)
-
-                const filtrado2 = (matrizY[testX] || []).filter(i => i.id !== this.id)
-
-
-                const n1 = (filtrado[0]?.x) % 24 === 0 && filtrado.length > 0
-
-                const n2 = (filtrado2[0]?.x || 24) % 24 !== 0 && filtrado2.length > 0
-
-                if (n1 || n2) {
-                    return n1 ? filtrado : filtrado2
-                }
-            }
-
+            return A && B
         }
-
-        const validationsNegatives = (input) => 1 / input === -Infinity
 
         for (let y = 0; y < this.hit_box.y; y++) {
 
@@ -152,14 +155,37 @@ export default class Entity {
 
                 const newY = (this.y + dy + (y * currentPixel)) / currentPixel
 
-                const side = validationFourSides({ newX, newY })
+                const sideX = Math.floor(newX)
+                const sideY = Math.floor(newY)
 
-                if (side || validationsNegatives(newX) || validationsNegatives(newY)) {
-                    return {
-                        object_colission: side
+                const obtenerMatriz = () => {
+
+                    for (let y = -1; y <= 1; y++) {
+
+                        for (let x = -1; x <= 1; x++) {
+
+                            if (matriz[sideY + y]) {
+
+                                const currentMatriz = (matriz[sideY + y][sideX + x] || []).filter(i => i.id !== this.id)[0]
+
+                                if (colissionCords(currentMatriz)) return currentMatriz
+                            }
+                        }
+
                     }
                 }
 
+                const colission = obtenerMatriz()
+
+
+                if (
+                    sideX < 0
+                    || sideY < 0
+                    || sideX > (matriz[0].length - 1)
+                    || sideY > (matriz.length - 1)
+                    || colission) {
+                    return colission || []
+                }
 
 
             }

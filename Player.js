@@ -4,19 +4,22 @@ export default class Player extends Entity {
 
     constructor(map) {
         super(map)
-        this.x = 3 * 24
-        this.y = 2 * 24
+        this.x = 3 * 12
+        this.y = 5 * 12
         this.width = 24
-        this.heigth = 24
-        this.moventSpeed = 12 //=> ,>1|Pares|24<
+        this.heigth = 48
+        this.moventSpeed = 12 //=> divisible % pixel
         this.hit_box = {
             x: 1,
-            y: 1
+            y: 2
         }
-        this.jump = false 
+        this.jump = false
         this.id = 0
         this.pause = false
         this.name = "player"
+        this.color = "blue"
+        this.fly = false
+        this.skills = {}
         this.constrols() //=> Auto ejecutable
     }
 
@@ -24,6 +27,10 @@ export default class Player extends Entity {
 
 
         window.addEventListener("keydown", (e) => {
+
+            e.preventDefault()
+            e.stopPropagation()
+
             if (e.key == "d") {
                 this.entityCheck({ dx: this.moventSpeed })
             } else if (e.key == "a") {
@@ -35,9 +42,12 @@ export default class Player extends Entity {
             } else if (e.key == "Escape") {
                 this.pause = !this.pause
             } else if (e.key == "Tab") {
+                console.log(this)
                 console.log(this.map.matriz)
-            }else if(e.code ==  "Space"){
-                this.jumpEntity({dy : -24 * 4})
+            } else if (e.code == "Space") {
+                this.jumpEntity({ dy: -24 * 5 })
+            } else if (e.key == "Alt") {
+                this.fly = !this.fly
             }
         })
     }
