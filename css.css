@@ -1,17 +1,39 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #333;
-    height: 100%;
+
+
+i {
+    font-size: 200px;
+    color: white;
+    rotate: 180deg;
 }
 
+.cuerda {
+    height: 400px;
+    width: 10px;
+    background-color: rgb(190, 190, 190);
+    filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5))
+}
 
-#cavans {
-    background-image: url("src/biomes/forest/windrise-background-4k.png");
-    background-color: white;
-    background-size: cover;
-    background-position: center;
-    background-position-y: 60%;
-    border: 1px solid white;
+#on {
+    color: #FDDB08;
+    filter: drop-shadow(1px 2px 10px #FDDB08);
+    display: none;
+    width: 500px;
+    min-height: 200px;
+    text-align: center;
+    
+}
+
+#on::after {
+    content: "";
+    position: absolute;
+    left: 0%;
+    top: -80%;
+    border-radius: 50%;
+    font-size: 0px;
+    height: 400px;
+    width: 500px;
+    filter: drop-shadow(1px 2px 10px #ede08e);
+    background-color: #ede08e;
+    opacity: 0.3;
+    transition: opacity 0.5s;
 }
