@@ -4,11 +4,11 @@ export default class Player extends Entity {
 
     constructor(map) {
         super(map)
-        this.x = 3 * 12
+        this.x = 4 * 12
         this.y = 5 * 12
         this.width = 24
         this.heigth = 48
-        this.moventSpeed = 12 //=> divisible % pixel
+        this.moventSpeed = 55 //=> divisible % pixel
         this.hit_box = {
             x: 1,
             y: 2

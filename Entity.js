@@ -1,4 +1,5 @@
-
+//Los valores de las matrices se deben tratar con Floor.
+//Por que si es un decimal por ejempl
 export default class Entity {
     constructor(map) {
         this.map = map
@@ -49,7 +50,7 @@ export default class Entity {
         }
     }
 
-    moveEntity({ dx, dy }) {
+    moveEntity({ dx = 0, dy = 0 } = 0) {
 
         const matriz = this.map.matriz
         const pixel = this.map.pixel
@@ -68,9 +69,6 @@ export default class Entity {
         }
     }
 
-    a() {
-        this.entityCheck({ dx: -12 })
-    }
 
     entityCheck({ dx = 0, dy = 0 } = {}) {
 
@@ -78,29 +76,33 @@ export default class Entity {
 
         const colission = this.collisionCheck({ dx, dy })
 
-
         if (colission) {
             const newY = (colission.y || this.y) - this.y
             const newX = (colission.x || this.x) - this.x
 
+            // console.log(colission.width || 24)  - this.x - (colission.x || 0)
+            // console.log(colission.width)
+
             if ((newY - this.heigth) > 0) {
+                this.removeEntity()
                 this.y += newY - this.heigth
-            } else if ((this.y + dy) < 0) {
+                this.moveEntity()
+            }
+            else if ((this.y + dy) < 0) {
                 this.y = 0
             } else if ((dx + this.x) < 0) {
                 this.x = 0
             }
             else if (newX !== 0) {
-             
-                const A = this.width + dx + this.x
-                const B = colission.x  + colission.width
+               
+                const restante = this.x - this.width - colission.x
 
-
-                this.x += (B - A)
-            } else if (newY < 0 && newX == 0) {
-                this.y = colission.y + colission.heigth
+                this.x += restante
+            } 
+            if(newX !== 0){
+                console.log(newX + colission.width)
             }
-
+                
             return colission
         }
         else {
