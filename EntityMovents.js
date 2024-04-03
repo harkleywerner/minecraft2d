@@ -15,7 +15,6 @@ export default class EntityMovents extends Entity {
 
         const total = this.y + dy
 
-        
         let perfomance = performance.now()
 
         const jump = (currentTime = 0) => {

@@ -8,7 +8,7 @@ export default class Player extends Entity {
         this.y = 7 * 12
         this.width = 24
         this.heigth = 48
-        this.moventSpeed = 5 //=> divisible % pixel
+        this.moventSpeed = 24 
         this.hit_box = {
             x: 1,
             y: 2
@@ -38,7 +38,8 @@ export default class Player extends Entity {
             } else if (e.key == "w") {
                 this.entityCheck({ dy: -this.moventSpeed })
             } else if (e.key == "s") {
-                this.entityCheck({ dy: this.moventSpeed })
+                this.gravityEntity()
+                this.entityCheck({ dy: this.moventSpeed})
             } else if (e.key == "Escape") {
                 this.pause = !this.pause
             } else if (e.key == "Tab") {

@@ -50,7 +50,7 @@ export default class Entity {
         }
     }
 
-    moveEntity({ dx = 0, dy = 0 } = 0) {
+    moveEntity() {
 
         const matriz = this.map.matriz
         const pixel = this.map.pixel
@@ -59,8 +59,8 @@ export default class Entity {
 
             for (let x = 0; x < this.hit_box.x; x++) {
 
-                const newX = x + Math.floor((dx + this.x) / pixel)
-                const newY = y + Math.floor((dy + this.y) / pixel)
+                const newX = x + Math.floor((this.x) / pixel)
+                const newY = y + Math.floor((this.y) / pixel)
                 const currentEntity = matriz[newY][newX] || []
                 currentEntity.filter(i => i.id !== this.id)
                 matriz[newY][newX] = [this]
@@ -69,6 +69,26 @@ export default class Entity {
         }
     }
 
+    borderColission({ dx, dy }) {
+        const colissionX = this.x + this.width + dx
+        const colissionY = this.y + this.heigth + dy
+
+        //Si el elemento ya se encuentra this.y + dy +
+
+
+        if (this.x + dx < 0) {
+            this.x = 0
+        } else if (colissionX > this.map.width) {
+            this.x = this.map.width - this.width
+        } else if (colissionY > this.map.heigth) {
+            this.y = this.map.heigth - this.heigth
+        } else if (this.y + dy < 0) {
+            this.y = 0
+        } else {
+            this.x += dx
+            this.y += dy
+        }
+    }
 
     entityCheck({ dx = 0, dy = 0 } = {}) {
 
@@ -79,45 +99,29 @@ export default class Entity {
         if (colission) {
 
             const newX = Math.abs(this.x - colission.x) - (dx > 0 ? this.width : colission.width)
+            //Esta logica siempre se aplica al bloque que esta encima de la colision.
+            const newY = Math.abs(this.y - colission.y) - (dy > 0 ? this.heigth : colission.heigth)
 
-            const newY = Math.abs(this.y - colission.y) - (dy > 0 ? this.heigth : colission.heigth )
-
-            if ((this.y + dy) < 0) {
-                this.y = 0
-            }
-            else if ((dx + this.x + this.width) > this.map.width) {
-                this.x = this.map.width - this.width
-            }
-            else if ((dx + this.x) < 0) {
-                this.x = 0
-            } else if (newX > 0 ) {
-                this.x += dx < 0 ? -newX : newX
-            } else if (newY > 0) {
+            if (newY > 0) {
                 this.y += dy < 0 ? -newY : newY
             }
-
+            else if (newX > 0) {
+                this.x += dx < 0 ? -newX : newX
+            }
 
             return colission
         }
         else {
             this.removeEntity()
-            this.moveEntity({ dx, dy })
-
-            const comprobateY = (this.y + dy) > (this.map.heigth - this.heigth)
-
-            if (comprobateY) {
-                this.y = this.map.heigth - this.heigth
-            } else {
-                this.y += dy
-            }
-
-            this.x += dx
+            this.borderColission({ dx, dy })
+            this.moveEntity()
         }
     }
 
     gravityEntity() {
-
-        this.entityCheck({ dy: 24 })
+        const t = this.y == this.map.heigth - this.heigth
+        if (t) return
+        this.entityCheck({ dy: 9.8 })
     }
 
 
@@ -143,16 +147,13 @@ export default class Entity {
             return A && B
         }
 
-        for (let y = 0; y < this.hit_box.y; y++) {
+        for (let y = 0; y < this.hit_box.y; y++) { //Verificar aca la hitbox.
 
             for (let x = 0; x < this.hit_box.x; x++) {
 
-                const newX = (this.x + dx + (x * currentPixel)) / currentPixel
+                const newX = Math.floor((this.x + dx + (x * currentPixel)) / currentPixel)
 
-                const newY = (this.y + dy + (y * currentPixel)) / currentPixel
-
-                const sideX = Math.floor(newX)
-                const sideY = Math.floor(newY)
+                const newY = Math.floor((this.y + dy + (y * currentPixel)) / currentPixel)
 
                 const obtenerMatriz = () => {
 
@@ -160,9 +161,9 @@ export default class Entity {
 
                         for (let x = -1; x <= 1; x++) {
 
-                            if (matriz[sideY + y]) {
+                            if (matriz[newY + y]) {
 
-                                const currentMatriz = (matriz[sideY + y][sideX + x] || []).filter(i => i.id !== this.id)[0]
+                                const currentMatriz = (matriz[newY + y][newX + x] || []).filter(i => i.id !== this.id)[0]
 
                                 if (colissionCords(currentMatriz)) return currentMatriz
                             }
@@ -172,17 +173,9 @@ export default class Entity {
                 }
 
                 const colission = obtenerMatriz()
-                const colissionX = this.x + this.width + dx > this.map.width
 
-
-                if (
-                    colissionX
-                    || sideX < 0
-                    || sideY < 0
-                    || sideX > (matriz[0].length - 1)
-                    || sideY > (matriz.length - 1)
-                    || colission) {
-                    return colission || []
+                if (colission) {
+                    return colission
                 }
 
 

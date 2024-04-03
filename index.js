@@ -13,14 +13,13 @@ const test = (x, y) => {
 
 
 
-// test(99,48)
-// test(68,48)
-// test(30,48)
-// test(130,48)
-test(99,72)
-test(99,48)
+test(99, 48)
+test(68, 48)
+test(30, 48)
+test(130, 48)
+test(99, 72)
+test(99, 16)
 
-test(12 * 6, 12 * 11)
 
 
 const player = new Player(map)
@@ -34,7 +33,7 @@ const animate = (e) => {
 
     Object.values(map.entityList).forEach(entity => {
 
-  
+
         if (!entity.jump && !entity.pause && !entity.fly) {
             entity.gravityEntity()
         }
@@ -42,9 +41,8 @@ const animate = (e) => {
         map.ctx.save()
         map.ctx.fillStyle = entity.color || "white"
         map.ctx.fillRect(entity.x, entity.y, entity.width, entity.heigth)
-
-        map.ctx.strokeStyle = 'green'; 
-        map.ctx.lineWidth = 2; 
+        map.ctx.strokeStyle = 'green';
+        map.ctx.lineWidth = 2;
         map.ctx.strokeRect(entity.x, entity.y, entity.width, entity.heigth);
         map.ctx.restore()
 
