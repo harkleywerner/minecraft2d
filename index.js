@@ -13,10 +13,14 @@ const test = (x, y) => {
 
 
 
-test(72,12)
+// test(99,48)
+// test(68,48)
+// test(30,48)
+// test(130,48)
+test(99,72)
+test(99,48)
 
-
-test(12 * 6, 24 * 3)
+test(12 * 6, 12 * 11)
 
 
 const player = new Player(map)

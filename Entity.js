@@ -77,32 +77,26 @@ export default class Entity {
         const colission = this.collisionCheck({ dx, dy })
 
         if (colission) {
-            const newY = (colission.y || this.y) - this.y
-            const newX = (colission.x || this.x) - this.x
 
-            // console.log(colission.width || 24)  - this.x - (colission.x || 0)
-            // console.log(colission.width)
+            const newX = Math.abs(this.x - colission.x) - (dx > 0 ? this.width : colission.width)
 
-            if ((newY - this.heigth) > 0) {
-                this.removeEntity()
-                this.y += newY - this.heigth
-                this.moveEntity()
-            }
-            else if ((this.y + dy) < 0) {
+            const newY = Math.abs(this.y - colission.y) - (dy > 0 ? this.heigth : colission.heigth )
+
+            if ((this.y + dy) < 0) {
                 this.y = 0
-            } else if ((dx + this.x) < 0) {
+            }
+            else if ((dx + this.x + this.width) > this.map.width) {
+                this.x = this.map.width - this.width
+            }
+            else if ((dx + this.x) < 0) {
                 this.x = 0
+            } else if (newX > 0 ) {
+                this.x += dx < 0 ? -newX : newX
+            } else if (newY > 0) {
+                this.y += dy < 0 ? -newY : newY
             }
-            else if (newX !== 0) {
-               
-                const restante = this.x - this.width - colission.x
 
-                this.x += restante
-            } 
-            if(newX !== 0){
-                console.log(newX + colission.width)
-            }
-                
+
             return colission
         }
         else {
@@ -178,10 +172,12 @@ export default class Entity {
                 }
 
                 const colission = obtenerMatriz()
+                const colissionX = this.x + this.width + dx > this.map.width
 
 
                 if (
-                    sideX < 0
+                    colissionX
+                    || sideX < 0
                     || sideY < 0
                     || sideX > (matriz[0].length - 1)
                     || sideY > (matriz.length - 1)
