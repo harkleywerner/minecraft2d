@@ -15,7 +15,7 @@ export default class Entity {
             vy: 2,
             max_vx: 20
         }
-        this.isCollapse = false
+        this.isCollapse = false //Indica si se debe o no colapsar la entidad.
         this.hit_box = {
             x: 1,
             y: 1
@@ -70,8 +70,12 @@ export default class Entity {
                 const newX = x + Math.floor((this.x) / pixel)
                 const newY = y + Math.floor((this.y) / pixel)
                 const currentEntity = matriz[newY][newX] || []
-                currentEntity.filter(i => i.id !== this.id)
-                matriz[newY][newX] = [this]
+
+                const isCollapse = this.isCollapse
+
+                const filtro = !isCollapse ? [] : currentEntity.filter(i => i.id !== this.id && i.isCollapse)
+
+                matriz[newY][newX] = [this, ...filtro]
             }
 
         }
@@ -151,6 +155,8 @@ export default class Entity {
 
         const matriz = this.map.matriz
 
+        const isCollapse = this.isCollapse
+
         const colissionCords = (element) => {
 
             if (!element) return
@@ -171,6 +177,7 @@ export default class Entity {
 
                 const newY = Math.floor((this.y + dy + (y * currentPixel)) / currentPixel)
 
+
                 const getMatriz = () => {
 
                     for (let y = -1; y <= 1; y++) {
@@ -179,12 +186,21 @@ export default class Entity {
 
                             if (matriz[newY + y]) {
 
-                                const currentMatriz = (matriz[newY + y][newX + x] || []).filter(i => i.id !== this.id)[0]
+                                const currentMatriz = (matriz[newY + y][newX + x] || [])
+                                    .filter(i => i.id !== this.id || isCollapse ? !i.isCollapse : i.isCollapse)[0]
+
+                                //Al verificar si es collapsable, tanto como el objecto false y true chocaran igualmente con otro.
+                                //Solo se da si el this true y el iterable es true.
+
+                                if(colissionCords(currentMatriz) && currentMatriz?.x == 48 * 2 && dx > 0){
+                                    console.log(currentMatriz)
+
+                                }
+                                 
 
                                 if (colissionCords(currentMatriz)) return currentMatriz
                             }
                         }
-
                     }
                 }
 

@@ -11,7 +11,7 @@ player.generateEntity(player)
 
 const test = (x, y) => {
 
-    let max = 15
+    let max = 300
 
     const pixel = map.pixel
     while (max > 0) {
@@ -19,7 +19,7 @@ const test = (x, y) => {
         const newX = Math.floor(Math.random() * (map.width / pixel))
         const newY = Math.floor(Math.random() * (map.heigth / pixel))
 
-        if (map.matriz[newY] && map.matriz[newY][newX] == 0) {
+        if (map.matriz[newY] && map.matriz[newY][newX] === 0) {
             const entity = new EntityMovents(map)
             entity.generateEntity(entity, newX * pixel, newY * pixel)
 
@@ -31,8 +31,23 @@ const test = (x, y) => {
 
 
 }
-const entity = new EntityMovents(map)
-entity.generateEntity(entity, 24,24)
+
+const a = (x, y) => {
+    const entity = new EntityMovents(map)
+    entity.generateEntity(entity, x, y)
+}
+
+a(24, 24)
+a(24, 48)
+a(24, 72)
+a(24, 96)
+a(48 * 2, 24 * 5)
+a(48 * 2, 24 * 6)
+
+
+
+
+
 
 
 const animate = () => {
@@ -43,7 +58,7 @@ const animate = () => {
     Object.values(map.entityList).forEach(entity => {
 
         if (!entity.jump && !player.pause && !entity.fly) {
-            // entity.freeFall()
+            entity.freeFall()
         }
 
         map.ctx.save()

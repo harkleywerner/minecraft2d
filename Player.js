@@ -4,17 +4,17 @@ export default class Player extends Entity {
 
     constructor(map) {
         super(map)
-        this.x = 3 * 24
+        this.x = 6 * 24
         this.y = 0 * 23
         this.width = this.map.pixel * 1
         this.heigth = this.map.pixel * 2
         this.velocity = {
-            vx: 10,
+            vx: 12,
             vy: 2,
-            max_vx: 20
+            max_vx: 24
         }
         this.hit_box = {
-            x: 1,
+            x: 2,
             y: 2
         }
         this.isCollapse = false
@@ -31,11 +31,11 @@ export default class Player extends Entity {
     constrols() {
 
 
-        window.addEventListener("keyup", (e) => {
-            if (e.key == "d" || e.key == "a") {
-                this.velocity.vx = 10
-            }
-        })
+        // window.addEventListener("keyup", (e) => {
+        //     if (e.key == "d" || e.key == "a") {
+        //         this.velocity.vx = 2
+        //     }
+        // })
 
         window.addEventListener("keydown", (e) => {
 
@@ -43,8 +43,7 @@ export default class Player extends Entity {
 
             if (e.key == "d") {
 
-                this.moventX({ dx: 0.5 })
-
+                // this.moventX({ dx: 0.5 })
                 this.entityCheck({ dx: this.velocity.vx })
             } else if (e.key == "a") {
                 this.moventX({ dx: 0.5 })
