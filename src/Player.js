@@ -4,8 +4,8 @@ export default class Player extends Entity {
 
     constructor(map) {
         super(map)
-        this.x = 6 * 24
-        this.y = 0 * 23
+        this.x = 0* 24
+        this.y = 0* 36
         this.width = this.map.pixel * 1
         this.heigth = this.map.pixel * 2
         this.velocity = {
@@ -14,43 +14,60 @@ export default class Player extends Entity {
             max_vx: 24
         }
         this.hit_box = {
-            x: 2,
+            x: 1,
             y: 2
         }
+        this.stats = {
+            health: 100,
+            level: 0,
+        }
+        this.equipament = {
+            hand: "sword" //=> Esto servira para luego indicar una id de un arma, la cual esta en un listtado de arma y armaduras.
+        }
+        this.skills = {
+            basic: {
+                cooldown: 3,
+                remainingCD: 0,
+                vel: 1.5,
+                damage: 25,
+            }
+        }
+        this.jumping = false
         this.isCollapse = false
-        this.jump = false
         this.id = 0
         this.pause = false
         this.name = "player"
         this.color = "blue"
         this.fly = false
-        this.skills = {}
         this.constrols() //=> Auto ejecutable
     }
 
     constrols() {
 
 
-        // window.addEventListener("keyup", (e) => {
-        //     if (e.key == "d" || e.key == "a") {
-        //         this.velocity.vx = 2
-        //     }
-        // })
+        window.addEventListener("keyup", (e) => {
+            if (e.key == "d" || e.key == "a") {
+                this.velocity.vx = 12
+            }
+        })
 
         window.addEventListener("keydown", (e) => {
 
             e.stopPropagation()
 
             if (e.key == "d") {
-
-                // this.moventX({ dx: 0.5 })
+                this.direction = "rigth"
+                this.moventX({ dx: 0.5 })
                 this.entityCheck({ dx: this.velocity.vx })
             } else if (e.key == "a") {
+                this.direction = "left"
                 this.moventX({ dx: 0.5 })
                 this.entityCheck({ dx: -this.velocity.vx })
             } else if (e.key == "w") {
+                this.direction = "top"
                 this.entityCheck({ dy: -this.velocity.vx })
             } else if (e.key == "s") {
+                this.direction = "bottom"
                 this.entityCheck({ dy: this.velocity.vx })
             } else if (e.key == "Escape") {
                 this.pause = !this.pause
@@ -59,10 +76,15 @@ export default class Player extends Entity {
                 console.log(this)
                 console.log(this.map.matriz)
             } else if (e.code == "Space") {
-                this.jumpEntity({ dy: -24 * 4 })
+                const fly = this.fly ? 1 : 4
+                this.jump({ dy: -24 * fly })
             } else if (e.key == "f") {
+                this.velocity.vy = 0
                 this.fly = !this.fly
+                this.jump({ dy: -24 * 3 })
                 console.log(`Fly ${this.fly}`)
+            } else if (e.key == "1") {
+                this.attack()
             }
         })
     }

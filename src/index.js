@@ -1,5 +1,6 @@
 import EntityMovents from "./EntityMovents.js";
 import Map from "./Map.js";
+import Mob from "./Mob.js";
 import Player from "./Player.js";
 
 
@@ -9,9 +10,12 @@ const player = new Player(map)
 
 player.generateEntity(player)
 
+const mob = new Mob(map)
+mob.generateEntity(mob)
+
 const test = (x, y) => {
 
-    let max = 300
+    let max = 0
 
     const pixel = map.pixel
     while (max > 0) {
@@ -22,7 +26,6 @@ const test = (x, y) => {
         if (map.matriz[newY] && map.matriz[newY][newX] === 0) {
             const entity = new EntityMovents(map)
             entity.generateEntity(entity, newX * pixel, newY * pixel)
-
             max -= 1
         }
 
@@ -37,12 +40,13 @@ const a = (x, y) => {
     entity.generateEntity(entity, x, y)
 }
 
-a(24, 24)
-a(24, 48)
-a(24, 72)
-a(24, 96)
-a(48 * 2, 24 * 5)
-a(48 * 2, 24 * 6)
+test()   
+// a(84, 24 * 24)
+// a(24, 48)
+// a(24, 72)
+// a(24, 96)
+// a(48 * 2, 24 * 5)
+// a(48 * 2, 24 * 6)
 
 
 
@@ -57,7 +61,7 @@ const animate = () => {
 
     Object.values(map.entityList).forEach(entity => {
 
-        if (!entity.jump && !player.pause && !entity.fly) {
+        if (!entity.jumping && !player.pause && !entity.fly) {
             entity.freeFall()
         }
 

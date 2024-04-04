@@ -10,10 +10,13 @@ export default class Entity {
         this.heigth = this.map.pixel * 1
         this.id = Math.random()
         this.name = "entity"
+        this.direction = "rigth"
+        this.stuck = false //esta logica luego se va aplicar a los  bloque staticos. LUEGO:
+        this.attacking = false
         this.velocity = {
             vx: 12,
             vy: 2,
-            max_vx: 20
+            max_vx: 24
         }
         this.isCollapse = false //Indica si se debe o no colapsar la entidad.
         this.hit_box = {
@@ -32,7 +35,20 @@ export default class Entity {
         this.entityCheck()
     }
 
-    removeEntity() {
+    despawnEntity({ entity } = {}) { //Despawnea de todas partes a la entidad.
+
+        const currentEntity = entity || this
+
+        if (currentEntity.stats.health <= 0) {
+            const id = currentEntity.id
+            delete currentEntity.map.entityList[id]
+            currentEntity.removeEntityInMatriz()
+        }
+
+
+    }
+
+    removeEntityInMatriz() { //Cambiar por nombre de matriz
 
         const matriz = this.map.matriz
         const pixel = this.map.pixel
@@ -46,19 +62,18 @@ export default class Entity {
 
                 const matrizY = matriz[newY]
 
-                const matrizX = matrizY && matrizY[newX] || []
+                if (matrizY) {
+                    const filtrado = (matrizY[newX] || []).filter(i => i.id !== this.id)
+                    matriz[newY][newX] = filtrado.length > 0 ? filtrado : 0
+                }
 
-                const filtrado = matrizX.filter(i => i.id !== this.id)
-
-
-                matriz[newY][newX] = filtrado.length > 0 ? filtrado : 0
 
             }
 
         }
     }
 
-    moveEntity() {
+    moveEntityInMatriz() {
 
         const matriz = this.map.matriz
         const pixel = this.map.pixel
@@ -69,13 +84,18 @@ export default class Entity {
 
                 const newX = x + Math.floor((this.x) / pixel)
                 const newY = y + Math.floor((this.y) / pixel)
-                const currentEntity = matriz[newY][newX] || []
 
-                const isCollapse = this.isCollapse
+                const matrizY = matriz[newY]
+                if (matrizY) {
+                    const currentEntity = matrizY[newX] || []
 
-                const filtro = !isCollapse ? [] : currentEntity.filter(i => i.id !== this.id && i.isCollapse)
+                    const isCollapse = this.isCollapse
 
-                matriz[newY][newX] = [this, ...filtro]
+                    const filtro = !isCollapse ? [] : currentEntity.filter(i => i.id !== this.id && i.isCollapse)
+
+                    matriz[newY][newX] = [this, ...filtro]
+                }
+
             }
 
         }
@@ -103,7 +123,7 @@ export default class Entity {
     entityCheck({ dx = 0, dy = 0 } = {}) {
         if (this.pause) return
 
-        this.removeEntity()
+        this.removeEntityInMatriz()
 
         const colission = this.collisionCheck({ dx, dy })
 
@@ -124,7 +144,7 @@ export default class Entity {
             this.borderColission({ dx, dy })
         }
 
-        this.moveEntity()
+        this.moveEntityInMatriz()
 
         return colission
     }
@@ -163,6 +183,7 @@ export default class Entity {
 
             const { x, y, width, heigth } = element
 
+
             const A = (this.x + dx) < x + width && (this.x + dx) + this.width > x
             const B = (this.y + dy) < y + heigth && (this.y + dy) + this.heigth > y
 
@@ -187,16 +208,9 @@ export default class Entity {
                             if (matriz[newY + y]) {
 
                                 const currentMatriz = (matriz[newY + y][newX + x] || [])
-                                    .filter(i => i.id !== this.id || isCollapse ? !i.isCollapse : i.isCollapse)[0]
+                                    .filter(i => (isCollapse ? !i.isCollapse : this.id !== i.id))[0]
 
-                                //Al verificar si es collapsable, tanto como el objecto false y true chocaran igualmente con otro.
-                                //Solo se da si el this true y el iterable es true.
-
-                                if(colissionCords(currentMatriz) && currentMatriz?.x == 48 * 2 && dx > 0){
-                                    console.log(currentMatriz)
-
-                                }
-                                 
+                                //Solo se da un colapso si el this true y el iterable/s es true.(Se unen en el array)
 
                                 if (colissionCords(currentMatriz)) return currentMatriz
                             }
