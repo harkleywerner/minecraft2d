@@ -10,12 +10,12 @@ const test = (x, y) => {
     entity.generateEntity(entity, x, y)
 }
 
-// test(99, 48)
-// test(68, 48)
-// test(30, 48)
-// test(130, 48)
-// test(99, 72)
-// test(99, 16)
+test(99, 48)
+test(68, 48)
+test(30, 48)
+test(130, 48)
+test(99, 72)
+test(99, 16)
 
 
 

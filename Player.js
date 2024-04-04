@@ -8,7 +8,7 @@ export default class Player extends Entity {
         this.y = 7 * 12
         this.width = 24
         this.heigth = 48
-        this.moventSpeed = 24
+        this.moventSpeed = 20
         this.hit_box = {
             x: 1,
             y: 2
@@ -45,7 +45,7 @@ export default class Player extends Entity {
                 console.log(this)
                 console.log(this.map.matriz)
             } else if (e.code == "Space") {
-                this.jumpEntity({ dy: -24 * 5 })
+                this.jumpEntity({ dy: -24 * 6 })
             } else if (e.key == "Alt") {
                 this.fly = !this.fly
             }

@@ -95,7 +95,7 @@ export default class Entity {
 
         const colission = this.collisionCheck({ dx, dy })
 
-        if (colission) {
+        if (typeof colission === "object") {
 
             const newX = Math.abs(this.x - colission.x) - (dx == 0 ? 0 : dx > 0 ? this.width : colission.width)
             //Esta logica siempre se aplica al bloque que esta encima de la colision.
@@ -155,8 +155,7 @@ export default class Entity {
 
                 const newY = Math.floor((this.y + dy + (y * currentPixel)) / currentPixel)
 
-                console.log(newY)
-                const obtenerMatriz = () => {
+                const getMatriz = () => {
 
                     for (let y = -1; y <= 1; y++) { //IMPORTAR****Checkear luego si se puede hacer solo tomango 6 indices.
 
@@ -173,10 +172,13 @@ export default class Entity {
                     }
                 }
 
-                const colission = obtenerMatriz()
+                const colission = getMatriz()
+                //bordes X+-
+                //border Y+-
+                //Objecto +-
 
-                if (colission) {
-                    return colission
+                if (colission || newX < 0 || newX > (matriz[0].length - 1) || newY < 0 || newY > (matriz.length - 1)) {
+                    return colission || "border"
                 }
 
 
