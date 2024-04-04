@@ -1,3 +1,4 @@
+"use strict"
 //Los valores de las matrices se deben tratar con Floor.
 //Por que si es un decimal por ejempl
 export default class Entity {
@@ -5,15 +6,20 @@ export default class Entity {
         this.map = map
         this.x = 0
         this.y = 0
-        this.width = 24
-        this.heigth = 24
+        this.width = this.map.pixel * 1
+        this.heigth = this.map.pixel * 1
         this.id = Math.random()
         this.name = "entity"
+        this.velocity = {
+            vx: 12,
+            vy: 2,
+            max_vx: 20
+        }
+        this.isCollapse = false
         this.hit_box = {
             x: 1,
             y: 1
         }
-        this.moventSpeed = 6
     }
 
     generateEntity(entity, x, y) {
@@ -38,9 +44,12 @@ export default class Entity {
                 const newX = x + Math.floor((x + this.x) / pixel)
                 const newY = y + Math.floor((y + this.y) / pixel)
 
-                const currentEntities = matriz[newY][newX] || []
+                const matrizY = matriz[newY]
 
-                const filtrado = currentEntities.filter(i => i.id !== this.id)
+                const matrizX = matrizY && matrizY[newX] || []
+
+                const filtrado = matrizX.filter(i => i.id !== this.id)
+
 
                 matriz[newY][newX] = filtrado.length > 0 ? filtrado : 0
 
@@ -84,20 +93,7 @@ export default class Entity {
             this.x += dx
             this.y += dy
         }
-    }
 
-    colissionObject({ colission, dx = 0, dy = 0 }) {
-
-            const newX = Math.abs(this.x - colission.x) - (dx == 0 ? 0 : dx > 0 ? this.width : colission.width)
-            //Esta logica siempre se aplica al bloque que esta encima de la colision.
-            const newY = Math.abs(this.y - colission.y) - (dy == 0 ? 0 : dy > 0 ? this.heigth : colission.heigth)
-
-            if (newY > 0 && dy !== 0) {
-                this.y += dy < 0 ? -newY : newY
-            }
-            else if (newX > 0 && dx !== 0) {
-                this.x += dx < 0 ? -newX : newX
-            }
     }
 
     entityCheck({ dx = 0, dy = 0 } = {}) {
@@ -108,27 +104,43 @@ export default class Entity {
         const colission = this.collisionCheck({ dx, dy })
 
         if (typeof colission === "object") {
-            this.colissionObject({ colission, dx, dy })
+            const newX = Math.abs(this.x - colission.x) - (dx == 0 ? 0 : dx > 0 ? this.width : colission.width)
+            //Esta logica siempre se aplica al bloque que esta encima de la colision.
+            const newY = Math.abs(this.y - colission.y) - (dy == 0 ? 0 : dy > 0 ? this.heigth : colission.heigth)
+
+            if (newY > 0 && dy !== 0) {
+                this.y += dy < 0 ? -newY : newY
+            }
+            else if (newX > 0 && dx !== 0) {
+                this.x += dx < 0 ? -newX : newX
+            }
         }
 
         else {
-
             this.borderColission({ dx, dy })
         }
 
         this.moveEntity()
+
+        return colission
     }
 
-    gravityEntity() {
+    freeFall() {
 
         const limiteY = this.y == this.map.heigth - this.heigth
 
-        if (limiteY) return
+        if (limiteY) {
+            return this.velocity.vy = 0
+        }
 
-        this.entityCheck({ dy: this.map.gravity })
+        const check = this.entityCheck({ dy: this.velocity.vy })
+
+        if (!check) {
+            this.velocity.vy += this.map.gravity
+        } else if (check) {
+            this.velocity.vy = 0
+        }
     }
-
-
 
     collisionCheck({
         dx = 0,
@@ -161,7 +173,7 @@ export default class Entity {
 
                 const getMatriz = () => {
 
-                    for (let y = -1; y <= 1; y++) { //IMPORTAR****Checkear luego si se puede hacer solo tomango 6 indices.
+                    for (let y = -1; y <= 1; y++) {
 
                         for (let x = -1; x <= 1; x++) {
 

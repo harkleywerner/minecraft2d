@@ -5,21 +5,34 @@ import Player from "./Player.js";
 
 const map = new Map()
 
-const test = (x, y) => {
-    const entity = new EntityMovents(map)
-    entity.generateEntity(entity, x, y)
-}
-
-test(9.8, 98.9)
-test(68, 3 * 24)
-test(30, 5  *24)
-test(130, 48)
-test(96, 6*24)
-
-
-
 const player = new Player(map)
+
 player.generateEntity(player)
+
+const test = (x, y) => {
+
+    let max = 15
+
+    const pixel = map.pixel
+    while (max > 0) {
+
+        const newX = Math.floor(Math.random() * (map.width / pixel))
+        const newY = Math.floor(Math.random() * (map.heigth / pixel))
+
+        if (map.matriz[newY] && map.matriz[newY][newX] == 0) {
+            const entity = new EntityMovents(map)
+            entity.generateEntity(entity, newX * pixel, newY * pixel)
+
+            max -= 1
+        }
+
+
+    }
+
+
+}
+const entity = new EntityMovents(map)
+entity.generateEntity(entity, 24,24)
 
 
 const animate = () => {
@@ -30,7 +43,7 @@ const animate = () => {
     Object.values(map.entityList).forEach(entity => {
 
         if (!entity.jump && !player.pause && !entity.fly) {
-            entity.gravityEntity()
+            // entity.freeFall()
         }
 
         map.ctx.save()
@@ -43,3 +56,6 @@ const animate = () => {
     requestAnimationFrame(animate)
 }
 animate()
+
+
+

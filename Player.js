@@ -4,16 +4,20 @@ export default class Player extends Entity {
 
     constructor(map) {
         super(map)
-        this.x = 4 * 24
-        this.y = 24 * 23
-        this.width = 24
-        this.heigth = 48
-        this.moventSpeed = 20 
+        this.x = 3 * 24
+        this.y = 0 * 23
+        this.width = this.map.pixel * 1
+        this.heigth = this.map.pixel * 2
+        this.velocity = {
+            vx: 10,
+            vy: 2,
+            max_vx: 20
+        }
         this.hit_box = {
             x: 1,
             y: 2
         }
-        this.Iscollapse = false
+        this.isCollapse = false
         this.jump = false
         this.id = 0
         this.pause = false
@@ -27,18 +31,28 @@ export default class Player extends Entity {
     constrols() {
 
 
+        window.addEventListener("keyup", (e) => {
+            if (e.key == "d" || e.key == "a") {
+                this.velocity.vx = 10
+            }
+        })
+
         window.addEventListener("keydown", (e) => {
 
             e.stopPropagation()
 
             if (e.key == "d") {
-                this.entityCheck({ dx: this.moventSpeed })
+
+                this.moventX({ dx: 0.5 })
+
+                this.entityCheck({ dx: this.velocity.vx })
             } else if (e.key == "a") {
-                this.entityCheck({ dx: -this.moventSpeed })
+                this.moventX({ dx: 0.5 })
+                this.entityCheck({ dx: -this.velocity.vx })
             } else if (e.key == "w") {
-                this.entityCheck({ dy: -this.moventSpeed })
+                this.entityCheck({ dy: -this.velocity.vx })
             } else if (e.key == "s") {
-                this.entityCheck({ dy: this.moventSpeed })
+                this.entityCheck({ dy: this.velocity.vx })
             } else if (e.key == "Escape") {
                 this.pause = !this.pause
                 console.log(`Pause ${this.pause}`)
@@ -46,7 +60,7 @@ export default class Player extends Entity {
                 console.log(this)
                 console.log(this.map.matriz)
             } else if (e.code == "Space") {
-                this.jumpEntity({ dy: -24 * 10})
+                this.jumpEntity({ dy: -24 * 4 })
             } else if (e.key == "f") {
                 this.fly = !this.fly
                 console.log(`Fly ${this.fly}`)

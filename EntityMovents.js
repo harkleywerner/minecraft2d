@@ -5,6 +5,13 @@ export default class EntityMovents extends Entity {
         super(map)
     }
 
+    moventX({ dx }) {
+
+        if (this.velocity.vx + dx > this.velocity.max_vx) return
+
+        this.velocity.vx += dx
+    }
+
     jumpEntity({ dy = 0 }) {
 
         if (this.jump) return
@@ -12,33 +19,22 @@ export default class EntityMovents extends Entity {
 
         this.jump = true
 
-        const gravity = this.map.gravity
-
         let lastY = 0 //Si el jump sigue y se quedo estancado, esto detectara que se quedo en el mismo ejeY
         //Sirve para en casos en que el floor haga el redondeo y la suma del 9.8 bajo del objecto al que esta colisinando.
 
-        let restante = Math.abs(905)
+        let restante = Math.abs(dy)
 
-        let perfomance = performance.now()
+        const jump = () => {
 
-        const jump = (currentTime = 0) => {
 
-            const elapsedTime = currentTime - perfomance
+            const check = this.entityCheck({ dy: -12 })
 
-            if (elapsedTime >= 30) {
+            if (restante <= 0 || lastY == this.y || check) return this.jump = false
 
-                perfomance = currentTime;
+            lastY = this.y //Teasteas esto
 
-               const check =  this.entityCheck({ dy: -gravity})
-               console.log(check,lastY)
+            restante -= 12
 
-                if (restante <= 0 || lastY == this.y || check) return this.jump = false
-
-                lastY = this.y
-
-                restante -= gravity
-
-            }
             requestAnimationFrame(jump)
         }
         jump()

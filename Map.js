@@ -11,7 +11,7 @@ export default class Map {
         this.heigth = 600
         this.pixel = 24
         this.ctx = ctx
-        this.gravity = 5.0
+        this.gravity = 0.20
         this.matriz = []
         this.generateMatriz()
     }
