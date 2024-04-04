@@ -101,7 +101,6 @@ export default class Entity {
     }
 
     entityCheck({ dx = 0, dy = 0 } = {}) {
-        console.log(dy)
         if (this.pause) return
 
         this.removeEntity()

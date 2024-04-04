@@ -5,13 +5,13 @@ export default class Player extends Entity {
     constructor(map) {
         super(map)
         this.x = 4 * 24
-        this.y = 24 * 24
+        this.y = 24 * 23
         this.width = 24
-        this.heigth = 24
+        this.heigth = 48
         this.moventSpeed = 20 
         this.hit_box = {
             x: 1,
-            y: 1
+            y: 2
         }
         this.Iscollapse = false
         this.jump = false
@@ -48,8 +48,8 @@ export default class Player extends Entity {
             } else if (e.code == "Space") {
                 this.jumpEntity({ dy: -24 * 10})
             } else if (e.key == "f") {
-                console.log(`Fly ${this.fly}`)
                 this.fly = !this.fly
+                console.log(`Fly ${this.fly}`)
             }
         })
     }
