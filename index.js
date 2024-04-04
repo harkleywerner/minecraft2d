@@ -35,7 +35,7 @@ const animate = (e) => {
 
 
         if (!entity.jump && !entity.pause && !entity.fly) {
-            entity.gravityEntity()
+            // entity.gravityEntity()
         }
 
         map.ctx.save()

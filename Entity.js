@@ -73,9 +73,6 @@ export default class Entity {
         const colissionX = this.x + this.width + dx
         const colissionY = this.y + this.heigth + dy
 
-        //Si el elemento ya se encuentra this.y + dy +
-
-
         if (this.x + dx < 0) {
             this.x = 0
         } else if (colissionX > this.map.width) {
@@ -102,13 +99,17 @@ export default class Entity {
             //Esta logica siempre se aplica al bloque que esta encima de la colision.
             const newY = Math.abs(this.y - colission.y) - (dy > 0 ? this.heigth : colission.heigth)
 
-            if (newY > 0) {
+            console.log(colission)
+            if (newY > 0 && dy !== 0) {
+                this.removeEntity()
                 this.y += dy < 0 ? -newY : newY
+                this.moveEntity()
             }
-            else if (newX > 0) {
+            else if (newX > 0 && dx !== 0) {
+                this.removeEntity()
                 this.x += dx < 0 ? -newX : newX
+                this.moveEntity()
             }
-
             return colission
         }
         else {
