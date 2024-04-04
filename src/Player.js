@@ -9,7 +9,7 @@ export default class Player extends Entity {
         this.width = this.map.pixel * 1
         this.heigth = this.map.pixel * 2
         this.velocity = {
-            vx: 12,
+            vx: 24,
             vy: 2,
             max_vx: 24
         }
@@ -32,6 +32,10 @@ export default class Player extends Entity {
                 damage: 25,
             }
         }
+        this.test = {
+            x : 0,
+            y : 0
+        }
         this.jumping = false
         this.isCollapse = false
         this.id = 0
@@ -49,6 +53,18 @@ export default class Player extends Entity {
             if (e.key == "d" || e.key == "a") {
                 this.velocity.vx = 12
             }
+        })
+
+        this.map.canvans.addEventListener("mousemove",(e) => {
+
+            const pixel = this.map.pixel
+
+            const canvasRect = this.map.canvans.getBoundingClientRect();
+            const clientX =  e.clientX - canvasRect.left
+            const clientY = e.clientY - canvasRect.top
+
+            this.test.x = clientX
+            this.test.y = clientY
         })
 
         window.addEventListener("keydown", (e) => {
