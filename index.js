@@ -10,12 +10,11 @@ const test = (x, y) => {
     entity.generateEntity(entity, x, y)
 }
 
-test(99, 48)
-test(68, 48)
-test(30, 48)
+test(99, 4 * 24)
+test(68, 3 * 24)
+test(30, 5  *24)
 test(130, 48)
-test(99, 72)
-test(99, 16)
+test(96, 15*24)
 
 
 
@@ -31,7 +30,8 @@ const animate = () => {
     Object.values(map.entityList).forEach(entity => {
 
 
-        if (!entity.jump && !entity.pause && !entity.fly) {
+
+        if (!entity.jump && !player.pause && !entity.fly) {
             entity.gravityEntity()
         }
 

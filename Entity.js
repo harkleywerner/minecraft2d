@@ -26,7 +26,6 @@ export default class Entity {
         this.entityCheck()
     }
 
-
     removeEntity() {
 
         const matriz = this.map.matriz
@@ -87,15 +86,7 @@ export default class Entity {
         }
     }
 
-    entityCheck({ dx = 0, dy = 0 } = {}) {
-
-        if (this.pause) return
-
-        this.removeEntity()
-
-        const colission = this.collisionCheck({ dx, dy })
-
-        if (typeof colission === "object") {
+    colissionObject({ colission, dx = 0, dy = 0 }) {
 
             const newX = Math.abs(this.x - colission.x) - (dx == 0 ? 0 : dx > 0 ? this.width : colission.width)
             //Esta logica siempre se aplica al bloque que esta encima de la colision.
@@ -107,8 +98,22 @@ export default class Entity {
             else if (newX > 0 && dx !== 0) {
                 this.x += dx < 0 ? -newX : newX
             }
+    }
+
+    entityCheck({ dx = 0, dy = 0 } = {}) {
+        console.log(dy)
+        if (this.pause) return
+
+        this.removeEntity()
+
+        const colission = this.collisionCheck({ dx, dy })
+
+        if (typeof colission === "object") {
+            this.colissionObject({ colission, dx, dy })
         }
+
         else {
+
             this.borderColission({ dx, dy })
         }
 
@@ -121,7 +126,7 @@ export default class Entity {
 
         if (limiteY) return
 
-        this.entityCheck({ dy: 9.8 })
+        this.entityCheck({ dy: this.map.gravity })
     }
 
 
@@ -173,9 +178,6 @@ export default class Entity {
                 }
 
                 const colission = getMatriz()
-                //bordes X+-
-                //border Y+-
-                //Objecto +-
 
                 if (colission || newX < 0 || newX > (matriz[0].length - 1) || newY < 0 || newY > (matriz.length - 1)) {
                     return colission || "border"
