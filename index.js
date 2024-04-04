@@ -10,15 +10,12 @@ const test = (x, y) => {
     entity.generateEntity(entity, x, y)
 }
 
-
-
-
-test(99, 48)
-test(68, 48)
-test(30, 48)
-test(130, 48)
-test(99, 72)
-test(99, 16)
+// test(99, 48)
+// test(68, 48)
+// test(30, 48)
+// test(130, 48)
+// test(99, 72)
+// test(99, 16)
 
 
 
@@ -26,7 +23,7 @@ const player = new Player(map)
 player.generateEntity(player)
 
 
-const animate = (e) => {
+const animate = () => {
 
     map.ctx.clearRect(0, 0, map.width, map.heigth)
     map.ctx.fillRect(0, 0, map.width, map.heigth);
@@ -35,12 +32,13 @@ const animate = (e) => {
 
 
         if (!entity.jump && !entity.pause && !entity.fly) {
-            // entity.gravityEntity()
+            entity.gravityEntity()
         }
 
         map.ctx.save()
         map.ctx.fillStyle = entity.color || "white"
         map.ctx.fillRect(entity.x, entity.y, entity.width, entity.heigth)
+
         map.ctx.strokeStyle = 'green';
         map.ctx.lineWidth = 2;
         map.ctx.strokeRect(entity.x, entity.y, entity.width, entity.heigth);

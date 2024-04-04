@@ -6,7 +6,9 @@ export default class EntityMovents extends Entity {
     }
     jumpEntity({ dy = 0 }) {
 
+        console.log()
       
+        console.log(this.collisionCheck({ dy: 24 }))
         if (this.jump) return
         //Pasar la logica de las collisionCheck dentro del bucle, par que en cada salto verifique
         else if (this.collisionCheck({ dy: -24 })) return //=> Verifica si hay algun objecto arriba

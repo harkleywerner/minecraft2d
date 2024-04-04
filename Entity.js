@@ -91,37 +91,36 @@ export default class Entity {
 
         if (this.pause) return
 
+        this.removeEntity()
+
         const colission = this.collisionCheck({ dx, dy })
 
         if (colission) {
 
-            const newX = Math.abs(this.x - colission.x) - (dx > 0 ? this.width : colission.width)
+            const newX = Math.abs(this.x - colission.x) - (dx == 0 ? 0 : dx > 0 ? this.width : colission.width)
             //Esta logica siempre se aplica al bloque que esta encima de la colision.
-            const newY = Math.abs(this.y - colission.y) - (dy > 0 ? this.heigth : colission.heigth)
+            const newY = Math.abs(this.y - colission.y) - (dy == 0 ? 0 : dy > 0 ? this.heigth : colission.heigth)
 
-            console.log(colission)
             if (newY > 0 && dy !== 0) {
-                this.removeEntity()
                 this.y += dy < 0 ? -newY : newY
-                this.moveEntity()
             }
             else if (newX > 0 && dx !== 0) {
-                this.removeEntity()
                 this.x += dx < 0 ? -newX : newX
-                this.moveEntity()
             }
-            return colission
         }
         else {
-            this.removeEntity()
             this.borderColission({ dx, dy })
-            this.moveEntity()
         }
+
+        this.moveEntity()
     }
 
     gravityEntity() {
-        const t = this.y == this.map.heigth - this.heigth
-        if (t) return
+
+        const limiteY = this.y == this.map.heigth - this.heigth
+
+        if (limiteY) return
+
         this.entityCheck({ dy: 9.8 })
     }
 
@@ -156,9 +155,10 @@ export default class Entity {
 
                 const newY = Math.floor((this.y + dy + (y * currentPixel)) / currentPixel)
 
+                console.log(newY)
                 const obtenerMatriz = () => {
 
-                    for (let y = -1; y <= 1; y++) {
+                    for (let y = -1; y <= 1; y++) { //IMPORTAR****Checkear luego si se puede hacer solo tomango 6 indices.
 
                         for (let x = -1; x <= 1; x++) {
 
