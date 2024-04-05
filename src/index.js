@@ -62,7 +62,7 @@ const animate = () => {
     Object.values(map.entityList).forEach(entity => {
 
         if (!entity.jumping && !player.pause && !entity.fly) {
-            entity.freeFall()
+            // entity.freeFall()
         }
 
       

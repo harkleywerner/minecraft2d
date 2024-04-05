@@ -15,7 +15,7 @@ export default class Entity {
         this.attacking = false
         this.velocity = {
             vx: 12, //=> Tiene que ser divisible % 24, para que pueda encajar en los bloques perfectamente
-            vy: 2,
+            vy: 0,
             max_vx: 24
         }
         this.isCollapse = false //Indica si se debe o no colapsar la entidad.
@@ -128,15 +128,20 @@ export default class Entity {
         const colission = this.collisionCheck({ dx, dy })
 
         if (typeof colission === "object") {
-            const newX = Math.abs(this.x - colission.x) - (dx == 0 ? 0 : dx > 0 ? this.width : colission.width)
-            //Esta logica siempre se aplica al bloque que esta encima de la colision.
-            const newY = Math.abs(this.y - colission.y) - (dy == 0 ? 0 : dy > 0 ? this.heigth : colission.heigth)
+      
+            const reamingX = Math.abs(this.x - colission.x)
+            const reamingY = Math.abs(this.y - colission.y)
 
-            if (newY > 0 && dy !== 0) {
-                this.y += dy < 0 ? -newY : newY
-            }
-            else if (newX > 0 && dx !== 0) {
-                this.x += dx < 0 ? -newX : newX
+           //Se toma en cuanta el ancho/alto de elemento mas cercano al 0.
+            const width = (dx > 0 ? this.width : colission.width)
+            const heigth = (dy > 0 ? this.heigth : colission.heigth)
+
+            if (reamingX > 0 && dx !== 0) {
+                const newX = Math.abs(reamingX - width)
+                this.x += dx > 0 ? newX : -newX
+            } else {
+                const newY = Math.abs(reamingY - heigth)
+                this.y += dy > 0 ? newY : -newY
             }
         }
 

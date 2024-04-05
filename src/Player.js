@@ -11,7 +11,7 @@ export default class Player extends Entity {
         this.artificalWidth = 24 //Testeando...
         this.velocity = {
             vx: 12,
-            vy: 2,
+            vy: 0,
         }
         this.hit_box = {
             x: 1,
