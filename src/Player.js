@@ -8,10 +8,10 @@ export default class Player extends Entity {
         this.y = 0* 36
         this.width = this.map.pixel * 1
         this.heigth = this.map.pixel * 2
+        this.artificalWidth = 24 //Testeando...
         this.velocity = {
-            vx: 24,
+            vx: 12,
             vy: 2,
-            max_vx: 24
         }
         this.hit_box = {
             x: 1,
@@ -22,13 +22,13 @@ export default class Player extends Entity {
             level: 0,
         }
         this.equipament = {
-            hand: "sword" //=> Esto servira para luego indicar una id de un arma, la cual esta en un listtado de arma y armaduras.
+            hand: "sword" //=> Range,vel.ataque
         }
         this.skills = {
             basic: {
-                cooldown: 3,
+                cooldown: 0.5,
                 remainingCD: 0,
-                vel: 1.5,
+                vel: 2, //Esto va ir en las armas nomas, en las habilidades solo damage,cd,rcd
                 damage: 25,
             }
         }
@@ -49,12 +49,6 @@ export default class Player extends Entity {
     constrols() {
 
 
-        window.addEventListener("keyup", (e) => {
-            if (e.key == "d" || e.key == "a") {
-                this.velocity.vx = 12
-            }
-        })
-
         this.map.canvans.addEventListener("mousemove",(e) => {
 
             const pixel = this.map.pixel
@@ -73,11 +67,9 @@ export default class Player extends Entity {
 
             if (e.key == "d") {
                 this.direction = "rigth"
-                this.moventX({ dx: 0.5 })
                 this.entityCheck({ dx: this.velocity.vx })
             } else if (e.key == "a") {
                 this.direction = "left"
-                this.moventX({ dx: 0.5 })
                 this.entityCheck({ dx: -this.velocity.vx })
             } else if (e.key == "w") {
                 this.direction = "top"

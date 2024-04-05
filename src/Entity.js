@@ -11,10 +11,10 @@ export default class Entity {
         this.id = Math.random()
         this.name = "entity"
         this.direction = "rigth"
-        this.stuck = false //esta logica luego se va aplicar a los  bloque staticos. LUEGO:
+        this.stuck = false //esta logica luego se va aplicar a los bloque atascado. LUEGO:
         this.attacking = false
         this.velocity = {
-            vx: 12,
+            vx: 12, //=> Tiene que ser divisible % 24, para que pueda encajar en los bloques perfectamente
             vy: 2,
             max_vx: 24
         }

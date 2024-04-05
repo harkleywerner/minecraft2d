@@ -5,35 +5,23 @@ export default class EntityMovents extends Entity {
         super(map)
     }
 
-    moventX({ dx }) {
-
-        if (this.velocity.vx + dx > this.velocity.max_vx) return
-
-        this.velocity.vx += dx
-    }
-
     getDirection({ remaining = 0 }) {
 
         const direction = this.direction
 
-
-        if (direction == "left") {
-            return { dx: -remaining }
-        } else if (direction == "rigth") {
-            return { dx: remaining }
-        } else if (direction == "top") {
-            return { dy: -remaining }
-        } else {
-            return { dy: remaining }
+        const obj = {
+            "left": { dx: -remaining },
+            "rigth": { dx: remaining },
+            "top": { dy: -remaining },
+            "buttom": { dy: remaining }
         }
+
+        return obj[direction]
     }
 
 
 
     attack({ skill = "basic" } = {}) {
-
-        //=> Range le pega hasta donde esta el mob, no importa si otro se interpone, ya que ataca de a varios.
-        //
 
         const pixel = this.map.pixel
 
@@ -43,12 +31,15 @@ export default class EntityMovents extends Entity {
 
         const damage = currentSkill.damage
 
-        let remaining = 12
+        let remaining = pixel / 2 
+        //Hacer con la mitad del bloque a cada iteracion, sirve para que no se saltee ningun elemento
 
-    
+        const maxTime = currentSkill.remainingCD + (currentSkill.cooldown * 1000)
+
+        if (maxTime > Date.now()) return
+
         const velocity = (1 / currentSkill.vel) * 1000
 
-   
         const loop = () => {
 
             const direction = this.getDirection({ remaining })
@@ -56,6 +47,7 @@ export default class EntityMovents extends Entity {
             const check = this.collisionCheck(direction);
 
             if (remaining > range * pixel || check) {
+
                 this.attacking = false
 
                 if (typeof check == "object") {
@@ -77,6 +69,7 @@ export default class EntityMovents extends Entity {
 
         setTimeout(() => {
             this.attacking = true
+            currentSkill.remainingCD = Date.now()
             loop()
         }, velocity);
 

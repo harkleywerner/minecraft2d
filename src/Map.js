@@ -1,12 +1,9 @@
 
 const canvans = document.getElementById("canvans1");
 const ctx = canvans.getContext("2d");
-// width="1488" height="600"
 
 canvans.width = 1488
 canvans.height = 600
-
-
 
 export default class Map {
     constructor() {
@@ -22,7 +19,8 @@ export default class Map {
     }
 
 
-    test(){
+    generateMatriz() {
+
         const pixel = this.pixel
 
         const heigth = Math.round(this.heigth / pixel)
@@ -31,20 +29,6 @@ export default class Map {
         this.matriz = Array.from({ length: heigth },
             () => Array.from({ length: width }, () => 0)
         )
-    }
-
-    generateMatriz() {
-
-        // window.addEventListener("resize", () => {
-        //     canvans.width = window.innerWidth
-        //     canvans.height = window.innerHeight - 100
-        //     this.width = canvans.width
-        //     this.heigth = canvans.height
-        
-        //     this.test()
-        // })
-
-        this.test()
     }
 
 }

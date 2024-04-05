@@ -65,9 +65,13 @@ const animate = () => {
             entity.freeFall()
         }
 
+      
         map.ctx.save()
         map.ctx.fillStyle = entity.color || "white"
         map.ctx.fillRect(entity.x, entity.y, entity.width, entity.heigth)
+        if(entity.artificalWidth){
+            // map.ctx.fillRect(entity.x + 24, entity.y, 24, 24)  
+        }
         // map.ctx.strokeStyle = "red"; // Color del borde
         // map.ctx.lineWidth = 2; // Ancho del borde
         // map.ctx.strokeRect(x, y, width, height);

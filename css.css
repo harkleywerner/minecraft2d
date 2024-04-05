@@ -3,4 +3,14 @@
     height: 100vh;
     display: flex;
     justify-content:center;
+    align-items: center;
+     overflow : hidden
+}
+
+#canvans1 {
+    overflow : scroll;
+    height: 100vh;
+    width : auto;
+    object-fit:contain;
+    transition: transform 0.5s ease;
 }
