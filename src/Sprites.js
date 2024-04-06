@@ -20,6 +20,10 @@ const list = {
     "idle": {
         row: 3,
         col: 3,
+    },
+    "attackR":{
+        row : 20,
+        col : 13
     }
 }
 

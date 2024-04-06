@@ -77,7 +77,6 @@ export default class Player extends Entity {
                 this.entityCheck({ dx: -this.velocity.vx })
             } else if (e.key == "w") {
                 this.direction = "top"
-
                 this.entityCheck({ dy: -this.velocity.vx })
             } else if (e.key == "s") {
                 this.direction = "bottom"
@@ -97,6 +96,9 @@ export default class Player extends Entity {
                 this.jump({ dy: -24 * 3 })
                 console.log(`Fly ${this.fly}`)
             } else if (e.key == "1") {
+               setInterval(() => {
+                this.sprite.handlerSprite({ type: "attackR" }) //Esto tiene que durar igual que al ataque speed.
+               }, 150);
                 this.attack()
             }
         })
