@@ -1,0 +1,1 @@
+//Esto seran los sprites generador de forma dinamica.

@@ -16,7 +16,7 @@ export default class Entity {
         this.velocity = {
             vx: 12, //=> Tiene que ser divisible % 24, para que pueda encajar en los bloques perfectamente
             vy: 0,
-            max_vx: 24
+            max_vx: 12
         }
         this.isCollapse = false //Indica si se debe o no colapsar la entidad.
         this.hit_box = {

@@ -1,21 +1,20 @@
 import Entity from "./EntityMovents.js";
 import Sprites from "./Sprites.js";
 
-
 export default class Player extends Entity {
 
     constructor(map) {
         super(map)
         this.x = 0 * 24
         this.y = 0 * 24
-        this.width = this.map.pixel * 3
+        this.width = this.map.pixel * 2
         this.heigth = this.map.pixel * 3
         this.velocity = {
             vx: 12,
             vy: 0,
         }
         this.hit_box = {
-            x: 3,
+            x: 2,
             y: 3
         }
         this.stats = {
@@ -23,19 +22,14 @@ export default class Player extends Entity {
             level: 0,
         }
         this.equipament = {
-            hand: "sword" //=> Range,vel.ataque
+            hand: {} //=> va el objecto completo del equipamento, con todas sus caractericas etc.
         }
         this.skills = {
             basic: {
                 cooldown: 0.5,
                 remainingCD: 0,
-                vel: 2, //Esto va ir en las armas nomas, en las habilidades solo damage,cd,rcd
                 damage: 25,
             }
-        }
-        this.test = {
-            x: 0,
-            y: 0
         }
         this.onFreeFall = true
         this.jumping = false
@@ -46,22 +40,23 @@ export default class Player extends Entity {
         this.color = "blue"
         this.fly = false
         this.constrols() //=> Auto ejecutable
-        this.sprite = new Sprites({ img: "src/images/player.png", test: this })
+        this.sprite = new Sprites()
     }
 
     constrols() {
 
+        // this.map.canvans.addEventListener("mousemove", (e) => { //esto se debera pasar parte de formato globa.
 
-        this.map.canvans.addEventListener("mousemove", (e) => {
+        //     const pixel = this.map.pixel
 
-            const pixel = this.map.pixel
+        //     const canvasRect = this.map.canvans.getBoundingClientRect();
+        //     const clientX = Math.floor((e.clientX - canvasRect.left) / pixel)
+        //     const clientY = Math.floor((e.clientY - canvasRect.top) / pixel)
+        // })
 
-            const canvasRect = this.map.canvans.getBoundingClientRect();
-            const clientX = e.clientX - canvasRect.left
-            const clientY = e.clientY - canvasRect.top
+        window.addEventListener("keyup", (e) => {
 
-            this.test.x = clientX
-            this.test.y = clientY
+            this.sprite.handlerSprite({ type: this.direction == "rigth" ? "idleR" : "idleL" })
         })
 
         window.addEventListener("keydown", (e) => {
@@ -96,9 +91,6 @@ export default class Player extends Entity {
                 this.jump({ dy: -24 * 3 })
                 console.log(`Fly ${this.fly}`)
             } else if (e.key == "1") {
-               setInterval(() => {
-                this.sprite.handlerSprite({ type: "attackR" }) //Esto tiene que durar igual que al ataque speed.
-               }, 150);
                 this.attack()
             }
         })

@@ -13,41 +13,46 @@ export default class EntityMovents extends Entity {
             "left": { dx: -remaining },
             "rigth": { dx: remaining },
             "top": { dy: -remaining },
-            "buttom": { dy: remaining }
+            "bottom": { dy: remaining }
         }
 
         return obj[direction]
     }
 
-
+    
 
     attack({ skill = "basic" } = {}) {
 
         const pixel = this.map.pixel
 
-        const range = 2
+        const range = 5 //Total pixele que recorre
 
         const currentSkill = this.skills[skill]
 
         const damage = currentSkill.damage
 
-        let remaining = pixel / 2 
-        //Hacer con la mitad del bloque a cada iteracion, sirve para que no se saltee ningun elemento
+        const step = pixel / 2
 
-        const maxTime = currentSkill.remainingCD + (currentSkill.cooldown * 1000)
+        let remaining = step
 
-        if (maxTime > Date.now()) return
+        if (currentSkill.remainingCD > Date.now() || this.attacking) return
 
-        const velocity = (1 / currentSkill.vel) * 1000
+        this.attacking = true
+
+        currentSkill.remainingCD = Date.now() + (currentSkill.cooldown * 1000)
+
+        const velocity = (1 / 1) * 1000
+
+        const interval = setInterval(() => {
+            this.sprite.handlerSprite({ type: "attackR" }) //Esto tiene que durar igual que al ataque speed / la cantida de columnas.
+        }, velocity / 13);
 
         const loop = () => {
 
             const direction = this.getDirection({ remaining })
-
             const check = this.collisionCheck(direction);
-
             if (remaining > range * pixel || check) {
-
+                this.sprite.handlerSprite({ type: "attackR", select_stage: 0 })
                 this.attacking = false
 
                 if (typeof check == "object") {
@@ -55,21 +60,19 @@ export default class EntityMovents extends Entity {
                     check.stats.health -= damage
                     this.despawnEntity({ entity: check })
                     setTimeout(() => {
-                        check.color = "yellow"
+                   check.color = "yellow"
                     }, velocity);
                 }
 
                 return
             }
 
-            remaining += 12
-
+            remaining += step
             requestAnimationFrame(loop)
         }
 
         setTimeout(() => {
-            this.attacking = true
-            currentSkill.remainingCD = Date.now()
+            clearInterval(interval)
             loop()
         }, velocity);
 

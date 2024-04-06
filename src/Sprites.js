@@ -1,40 +1,52 @@
 const canvans = document.getElementById("canvans1");
 const ctx = canvans.getContext("2d");
-//definir la compensacion en cada imagen, para que este acorde a la hitbox
-//Revisar luego, si la imagen supera al tamaño de la hitbox, para hacer algun algoritmo que se encargue de
-//Determinar todo
+
+//Los sprites se generaran con la APP de sprite generator.
+//Es decir que pasareos lo escencial para que pueda identificar y generar el nueva sprite.
 
 const list = {
     "walkL": {
         row: 10,
         col: 6,
-        offsetX: 0,
-        offsetY : -5
+        offsetX: -10,
+        offsetY: -5,
+        start_col: 1
     },
     "walkR": {
         row: 12,
         col: 6,
-        offsetX: 0,
-        offsetY : -5
+        offsetX: -10,
+        offsetY: -5,
+        start_col: 1
     },
-    "idle": {
-        row: 3,
-        col: 3,
+    "idleR": {
+        row: 12,
+        col: 1,
+        offsetX: -10,
+        offsetY: -5
     },
-    "attackR":{
-        row : 20,
-        col : 13
+    "idleL": {
+        row: 10,
+        col: 1,
+        offsetX: -10,
+        offsetY: -5
+    },
+    "attackR": {
+        row: 20,
+        col: 13,
+        offsetY: -2,
+        offsetX: -10,
     }
 }
 
 
 export default class Sprites {
-    constructor({ max_col = 18, max_row = 21, animations = list, scale = 0.7, img = "", test }) {
+    constructor({ max_col = 18, max_row = 21, animations = list, scale = 0.7, img = "src/images/player.png" } = {}) {
         this.max_col = max_col
         this.max_row = max_row
         this.scale = scale
         this.currentSprite = {
-            type: "walkR",
+            type: "idleR",
             stage: 0
         }
         this.img = (() => {
@@ -51,18 +63,21 @@ export default class Sprites {
 
         const currentAnimation = this.animations[type]
 
-        // currentAnimation.offsetX = currentAnimation.offsetX >= 12 ? 12 : currentAnimation.offsetX + 1
-
         if (compare) {
-            this.currentSprite = { type, stage: 0 }
+            this.currentSprite = { type, stage: currentAnimation.start_col ?? 0 }
         } else {
-            const nextStage = select_stage || this.currentSprite.stage + 1
-            const f = nextStage > (currentAnimation.col - 1)
-            this.currentSprite.stage = f ? 0 : nextStage
+            const nextStage = select_stage ?? this.currentSprite.stage + 1
+            const nt = nextStage > (currentAnimation.col - 1)
+            this.currentSprite.stage = nt ? 0 : nextStage
         }
-    }
-    offsetAnimation() {
+        1
+    }  
 
+    generateNewSprite(){
+        //Aca generaria un sprite con respecto al patron definido.
+        //Como el generadore de sprite, se hace mediante una URL, podriamos utilizar eso para generar un sprite previmante almacenado
+        //Entonces si solamente cambia el arco, se generaria otro sprite interactivo con ese arco.
+        //Al sprite se le pasara un objecto que contenga a detalle todo lo que se debe renderizar.
     }
 
     injectSprite({ dx = 5, dy = 5 }) {
@@ -88,7 +103,7 @@ export default class Sprites {
             sh * spriteHeight,
             spriteWidth, // Ancho y alto individual del la img
             spriteHeight,
-            dx +offsetX  , //cords
+            dx + offsetX, //cords
             dy + offsetY,
             spriteWidth * this.scale, //ancho y altura en canvans
             spriteHeight * this.scale

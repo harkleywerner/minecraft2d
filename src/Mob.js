@@ -13,7 +13,7 @@ export default class Mob extends EntityMovents {
             y: 3
         }
         this.stats = {
-            health: 100,
+            health: 5000,
             level: 0
         }
         this.isCollapse = false

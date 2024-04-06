@@ -9,9 +9,8 @@
 
 #canvans1 {
     overflow : scroll;
-    height: 100vh;
     width : auto;
     object-fit:contain;
     transition: transform 0.5s ease;
-    border: 1px solid black;
+    box-shadow: 10px 10px 29px 0px rgba(141,219,183,0.75);
 }
