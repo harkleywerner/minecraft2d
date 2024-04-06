@@ -1,20 +1,21 @@
 import Entity from "./EntityMovents.js";
+import Sprites from "./Sprites.js";
+
 
 export default class Player extends Entity {
 
     constructor(map) {
         super(map)
-        this.x = 0* 24
-        this.y = 0* 36
-        this.width = this.map.pixel * 1
+        this.x = 0 * 24
+        this.y = 0 * 24
+        this.width = this.map.pixel * 2
         this.heigth = this.map.pixel * 2
-        this.artificalWidth = 24 //Testeando...
         this.velocity = {
             vx: 12,
             vy: 0,
         }
         this.hit_box = {
-            x: 1,
+            x: 2,
             y: 2
         }
         this.stats = {
@@ -33,9 +34,10 @@ export default class Player extends Entity {
             }
         }
         this.test = {
-            x : 0,
-            y : 0
+            x: 0,
+            y: 0
         }
+        this.onFreeFall = false
         this.jumping = false
         this.isCollapse = false
         this.id = 0
@@ -44,17 +46,18 @@ export default class Player extends Entity {
         this.color = "blue"
         this.fly = false
         this.constrols() //=> Auto ejecutable
+        this.sprite = new Sprites({ img: "src/images/player.png",test : this })
     }
 
     constrols() {
 
 
-        this.map.canvans.addEventListener("mousemove",(e) => {
+        this.map.canvans.addEventListener("mousemove", (e) => {
 
             const pixel = this.map.pixel
 
             const canvasRect = this.map.canvans.getBoundingClientRect();
-            const clientX =  e.clientX - canvasRect.left
+            const clientX = e.clientX - canvasRect.left
             const clientY = e.clientY - canvasRect.top
 
             this.test.x = clientX
@@ -62,24 +65,26 @@ export default class Player extends Entity {
         })
 
         window.addEventListener("keydown", (e) => {
-
             e.stopPropagation()
 
             if (e.key == "d") {
                 this.direction = "rigth"
+                this.sprite.handlerSprite({ type: "walkR" })
                 this.entityCheck({ dx: this.velocity.vx })
             } else if (e.key == "a") {
                 this.direction = "left"
-                this.entityCheck({ dx: -this.velocity.vx })
+                this.sprite.handlerSprite({ type: "walkL" })
+                // this.entityCheck({ dx: -this.velocity.vx })
             } else if (e.key == "w") {
                 this.direction = "top"
+
                 this.entityCheck({ dy: -this.velocity.vx })
             } else if (e.key == "s") {
                 this.direction = "bottom"
                 this.entityCheck({ dy: this.velocity.vx })
             } else if (e.key == "Escape") {
-                this.pause = !this.pause
-                console.log(`Pause ${this.pause}`)
+                this.onFreefall = !this.onFreefall
+                console.log(`Pause ${this.onFreefall}`)
             } else if (e.key == "Tab") {
                 console.log(this)
                 console.log(this.map.matriz)

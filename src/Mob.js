@@ -4,13 +4,13 @@ import EntityMovents from "./EntityMovents.js";
 export default class Mob extends EntityMovents {
     constructor(map) {
         super(map)
-        this.x = 123
+        this.x = 48
         this.y = (3 * 24)
         this.width = this.map.pixel * 1
-        this.heigth = this.map.pixel * 1
+        this.heigth = this.map.pixel * 2
         this.hit_box = {
             x: 1,
-            y: 1
+            y: 2
         }
         this.stats = {
             health: 100,
