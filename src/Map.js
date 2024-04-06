@@ -10,7 +10,7 @@ export default class Map {
         this.entityList = {}
         this.width = canvans.width
         this.heigth = canvans.height
-        this.pixel = 24
+        this.pixel = 12
         this.ctx = ctx
         this.canvans = canvans
         this.gravity = 0.20

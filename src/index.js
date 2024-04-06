@@ -15,7 +15,7 @@ mob.generateEntity(mob)
 
 const test = (x, y) => {
 
-    let max = 500
+    let max = 0
 
     const pixel = map.pixel
     while (max > 0) {
@@ -48,11 +48,15 @@ test()
 // a(48 * 2, 24 * 5)
 // a(48 * 2, 24 * 6)
 
+const img = new Image()
+img.src = "src/images/sky.jpg"
 
 const animate = () => {
 
+
     map.ctx.clearRect(0, 0, map.width, map.heigth)
-    map.ctx.fillRect(0, 0, map.width, map.heigth);
+
+    map.ctx.drawImage(img, 0, 0, map.width, map.heigth);
 
     Object.values(map.entityList).forEach(entity => {
 
@@ -64,7 +68,7 @@ const animate = () => {
         if (entity.sprite) {
             map.ctx.strokeStyle = "red"; // Color del borde
             map.ctx.lineWidth = 2;
-            map.ctx.strokeRect(entity.x, entity.y, entity.width, entity.heigth) 
+            // map.ctx.strokeRect(entity.x, entity.y, entity.width, entity.heigth)
             entity.sprite.injectSprite({ dx: entity.x, dy: entity.y })
         } else {
             map.ctx.fillStyle = entity.color || "white"

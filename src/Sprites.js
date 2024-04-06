@@ -1,17 +1,21 @@
 const canvans = document.getElementById("canvans1");
 const ctx = canvans.getContext("2d");
-
+//definir la compensacion en cada imagen, para que este acorde a la hitbox
+//Revisar luego, si la imagen supera al tamaño de la hitbox, para hacer algun algoritmo que se encargue de
+//Determinar todo
 
 const list = {
     "walkL": {
         row: 10,
         col: 6,
-        offsetX: -12
+        offsetX: 0,
+        offsetY : -5
     },
     "walkR": {
         row: 12,
         col: 6,
-        offsetX: 0
+        offsetX: 0,
+        offsetY : -5
     },
     "idle": {
         row: 3,
@@ -21,7 +25,7 @@ const list = {
 
 
 export default class Sprites {
-    constructor({ max_col = 18, max_row = 21, animations = list, scale = 0.8, img = "", test }) {
+    constructor({ max_col = 18, max_row = 21, animations = list, scale = 0.7, img = "", test }) {
         this.max_col = max_col
         this.max_row = max_row
         this.scale = scale
@@ -43,7 +47,7 @@ export default class Sprites {
 
         const currentAnimation = this.animations[type]
 
-        currentAnimation.offsetX = currentAnimation.offsetX >= 12 ? 12 : currentAnimation.offsetX + 1
+        // currentAnimation.offsetX = currentAnimation.offsetX >= 12 ? 12 : currentAnimation.offsetX + 1
 
         if (compare) {
             this.currentSprite = { type, stage: 0 }
@@ -53,7 +57,7 @@ export default class Sprites {
             this.currentSprite.stage = f ? 0 : nextStage
         }
     }
-    offsetAnimation(){
+    offsetAnimation() {
 
     }
 
@@ -80,7 +84,7 @@ export default class Sprites {
             sh * spriteHeight,
             spriteWidth, // Ancho y alto individual del la img
             spriteHeight,
-            dx + offsetX, //cords
+            dx +offsetX  , //cords
             dy + offsetY,
             spriteWidth * this.scale, //ancho y altura en canvans
             spriteHeight * this.scale

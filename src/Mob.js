@@ -7,14 +7,13 @@ export default class Mob extends EntityMovents {
         this.x = 48
         this.y = (3 * 24)
         this.width = this.map.pixel * 1
-        this.heigth = this.map.pixel * 2
+        this.heigth = this.map.pixel * 3
         this.hit_box = {
             x: 1,
-            y: 2
+            y: 3
         }
         this.stats = {
             health: 100,
-
             level: 0
         }
         this.isCollapse = false

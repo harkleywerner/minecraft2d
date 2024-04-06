@@ -8,15 +8,15 @@ export default class Player extends Entity {
         super(map)
         this.x = 0 * 24
         this.y = 0 * 24
-        this.width = this.map.pixel * 2
-        this.heigth = this.map.pixel * 2
+        this.width = this.map.pixel * 3
+        this.heigth = this.map.pixel * 3
         this.velocity = {
             vx: 12,
             vy: 0,
         }
         this.hit_box = {
-            x: 2,
-            y: 2
+            x: 3,
+            y: 3
         }
         this.stats = {
             health: 100,
@@ -37,7 +37,7 @@ export default class Player extends Entity {
             x: 0,
             y: 0
         }
-        this.onFreeFall = false
+        this.onFreeFall = true
         this.jumping = false
         this.isCollapse = false
         this.id = 0
@@ -46,7 +46,7 @@ export default class Player extends Entity {
         this.color = "blue"
         this.fly = false
         this.constrols() //=> Auto ejecutable
-        this.sprite = new Sprites({ img: "src/images/player.png",test : this })
+        this.sprite = new Sprites({ img: "src/images/player.png", test: this })
     }
 
     constrols() {
@@ -74,7 +74,7 @@ export default class Player extends Entity {
             } else if (e.key == "a") {
                 this.direction = "left"
                 this.sprite.handlerSprite({ type: "walkL" })
-                // this.entityCheck({ dx: -this.velocity.vx })
+                this.entityCheck({ dx: -this.velocity.vx })
             } else if (e.key == "w") {
                 this.direction = "top"
 
