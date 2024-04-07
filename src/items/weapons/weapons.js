@@ -1,14 +1,14 @@
 
 const bow = {
-    id: "bow_1",
-    type: "range",
-    name: "bow",
+    type: "weapon",
+    name: "ligth_bow",
     vel: 2,
     damage: 10,
     size: 1,
-    range : 5,
+    range: 5,
     durability: 100,
 }
 
 
-export default bow
+
+export default { bow }

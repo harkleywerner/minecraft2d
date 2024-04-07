@@ -10,9 +10,6 @@ export default class Entity {
         this.heigth = this.map.pixel * 1
         this.id = Math.random()
         this.name = "entity"
-        this.direction = "rigth"
-        this.stuck = false //esta logica luego se va aplicar a los bloque atascado. LUEGO:
-        this.attacking = false
         this.velocity = {
             vx: 12, //=> Tiene que ser divisible % 24, para que pueda encajar en los bloques perfectamente
             vy: 0,
@@ -53,12 +50,13 @@ export default class Entity {
         const matriz = this.map.matriz
         const pixel = this.map.pixel
 
+
         for (let y = 0; y < this.hit_box.y; y++) {
 
             for (let x = 0; x < this.hit_box.x; x++) {
 
-                const newX = x + Math.floor((x + this.x) / pixel)
-                const newY = y + Math.floor((y + this.y) / pixel)
+                const newX = x + Math.floor((this.x) / pixel)
+                const newY = y + Math.floor((this.y) / pixel)
 
                 const matrizY = matriz[newY]
 
@@ -66,8 +64,6 @@ export default class Entity {
                     const filtrado = (matrizY[newX] || []).filter(i => i.id !== this.id)
                     matriz[newY][newX] = filtrado.length > 0 ? filtrado : 0
                 }
-
-
             }
 
         }
@@ -121,6 +117,7 @@ export default class Entity {
     }
 
     entityCheck({ dx = 0, dy = 0 } = {}) {
+
         if (this.pause) return
 
         this.removeEntityInMatriz()
@@ -128,11 +125,11 @@ export default class Entity {
         const colission = this.collisionCheck({ dx, dy })
 
         if (typeof colission === "object") {
-      
+
             const reamingX = Math.abs(this.x - colission.x)
             const reamingY = Math.abs(this.y - colission.y)
 
-           //Se toma en cuanta el ancho/alto de elemento mas cercano al 0.
+            //Se toma en cuanta el ancho/alto de elemento mas cercano al 0.
             const width = (dx > 0 ? this.width : colission.width)
             const heigth = (dy > 0 ? this.heigth : colission.heigth)
 

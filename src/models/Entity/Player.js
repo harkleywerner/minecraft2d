@@ -1,5 +1,7 @@
 import Entity from "./EntityMovents.js";
-import Sprites from "./Sprites.js";
+import Sprites from "../../Sprites.js";
+import createItem from "../../items/createItem.js";
+
 
 export default class Player extends Entity {
 
@@ -56,7 +58,7 @@ export default class Player extends Entity {
 
         window.addEventListener("keyup", (e) => {
 
-            this.sprite.handlerSprite({ type: this.direction == "rigth" ? "idleR" : "idleL" })
+            // this.sprite.handlerSprite({ type: this.direction == "rigth" ? "idleR" : "idleL" })
         })
 
         window.addEventListener("keydown", (e) => {
@@ -77,8 +79,7 @@ export default class Player extends Entity {
                 this.direction = "bottom"
                 this.entityCheck({ dy: this.velocity.vx })
             } else if (e.key == "Escape") {
-                this.onFreefall = !this.onFreefall
-                console.log(`Pause ${this.onFreefall}`)
+                // console.log(new createItem(this.map))
             } else if (e.key == "Tab") {
                 console.log(this)
                 console.log(this.map.matriz)

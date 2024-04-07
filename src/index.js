@@ -1,7 +1,7 @@
-import EntityMovents from "./EntityMovents.js";
+import EntityMovents from "./models/Entity/EntityMovents.js";
 import Map from "./Map.js";
-import Mob from "./Mob.js";
-import Player from "./Player.js";
+import Mob from "./models/Entity/Mob.js";
+import Player from "./models/Entity/Player.js";
 
 
 const map = new Map()
@@ -15,7 +15,7 @@ mob.generateEntity(mob)
 
 const test = (x, y) => {
 
-    let max = 50
+    let max = 0
 
     const pixel = map.pixel
     while (max > 0) {
@@ -28,11 +28,7 @@ const test = (x, y) => {
             entity.generateEntity(entity, newX * pixel, newY * pixel)
             max -= 1
         }
-
-
     }
-
-
 }
 
 test()
@@ -41,7 +37,6 @@ const img = new Image()
 img.src = "src/images/sky.jpg"
 
 const animate = () => {
-
 
     map.ctx.clearRect(0, 0, map.width, map.heigth)
 
@@ -69,6 +64,8 @@ const animate = () => {
 
 
     })
+
+
     map.ctx.save()
     map.ctx.globalCompositeOperation = "destination-over";
     map.ctx.drawImage(img, 0, 0, map.width, map.heigth);
@@ -77,4 +74,3 @@ const animate = () => {
     requestAnimationFrame(animate)
 }
 animate()
-

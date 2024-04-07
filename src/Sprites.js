@@ -60,7 +60,7 @@ export default class Sprites {
     handlerSprite({ type, select_stage }) {
 
         const compare = this.currentSprite.type !== type
-
+        
         const currentAnimation = this.animations[type]
 
         if (compare) {
@@ -70,7 +70,6 @@ export default class Sprites {
             const nt = nextStage > (currentAnimation.col - 1)
             this.currentSprite.stage = nt ? 0 : nextStage
         }
-        1
     }  
 
     generateNewSprite(){

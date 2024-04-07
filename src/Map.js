@@ -13,7 +13,7 @@ export default class Map {
         this.pixel = 12
         this.ctx = ctx
         this.canvans = canvans
-        this.gravity = 0.20
+        this.gravity = 0.2
         this.matriz = []
         this.generateMatriz()
     }

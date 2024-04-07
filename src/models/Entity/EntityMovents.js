@@ -19,7 +19,7 @@ export default class EntityMovents extends Entity {
         return obj[direction]
     }
 
-    
+
 
     attack({ skill = "basic" } = {}) {
 
@@ -60,7 +60,7 @@ export default class EntityMovents extends Entity {
                     check.stats.health -= damage
                     this.despawnEntity({ entity: check })
                     setTimeout(() => {
-                   check.color = "yellow"
+                        check.color = "yellow"
                     }, velocity);
                 }
 
