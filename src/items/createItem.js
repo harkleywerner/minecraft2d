@@ -1,12 +1,11 @@
 
-import Entity from "../models/Entity/Entity.js"
-import weapons from "./weapons/weapons.js"
+import weapons from "./weapons.js"
 
 const list = {
   weapons
 }
 
-function createItem({ type = "weapons", name = "bow" } = {}) {
+export default function createItem({ type = "weapons", name = "bow" } = {}) {
 
   const generateId = Math.random() * 50000
 
@@ -19,10 +18,3 @@ function createItem({ type = "weapons", name = "bow" } = {}) {
 
 }
 
-
-export default class Items extends Entity {
-  constructor(map){
-    super(map)
-    this.item = createItem()
-  }
-}

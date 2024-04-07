@@ -33,7 +33,7 @@ const list = {
     },
     "attackR": {
         row: 20,
-        col: 13,
+        col: 12,
         offsetY: -2,
         offsetX: -10,
     }

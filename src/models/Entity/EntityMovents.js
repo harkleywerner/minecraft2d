@@ -31,6 +31,8 @@ export default class EntityMovents extends Entity {
 
         const damage = currentSkill.damage
 
+        const hand = this.equipament.hand
+
         const step = pixel / 2
 
         let remaining = step
@@ -41,11 +43,11 @@ export default class EntityMovents extends Entity {
 
         currentSkill.remainingCD = Date.now() + (currentSkill.cooldown * 1000)
 
-        const velocity = (1 / 1) * 1000
+        const velocity = (1 / hand.vel) * 1000
 
         const interval = setInterval(() => {
             this.sprite.handlerSprite({ type: "attackR" }) //Esto tiene que durar igual que al ataque speed / la cantida de columnas.
-        }, velocity / 13);
+        }, velocity / 12);
 
         const loop = () => {
 

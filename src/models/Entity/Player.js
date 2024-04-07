@@ -19,12 +19,21 @@ export default class Player extends Entity {
             x: 2,
             y: 3
         }
+        this.attacking = false
         this.stats = {
             health: 100,
             level: 0,
         }
         this.equipament = {
-            hand: {} //=> va el objecto completo del equipamento, con todas sus caractericas etc.
+            hand: {
+                type: "weapon",
+                name: "ligth_bow",
+                vel: 1.2,
+                damage: 10,
+                size: 1,
+                range: 5,
+                durability: 100,
+            } //=> va el objecto completo del equipamento, con todas sus caractericas etc.
         }
         this.skills = {
             basic: {
@@ -79,7 +88,7 @@ export default class Player extends Entity {
                 this.direction = "bottom"
                 this.entityCheck({ dy: this.velocity.vx })
             } else if (e.key == "Escape") {
-                // console.log(new createItem(this.map))
+                console.log(new createItem(this.map))
             } else if (e.key == "Tab") {
                 console.log(this)
                 console.log(this.map.matriz)
