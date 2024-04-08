@@ -1,16 +1,19 @@
 
 
 
-class Inventory { 
+export default class Inventory {
     constructor() {
         this.inventoryList = []
     }
 
-    addItem({  }) {
+    addItem({ }) {
 
+
+    }
+    
+    removeItem(){
 
     }
 }
 
 
-export default Items

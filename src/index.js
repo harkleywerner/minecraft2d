@@ -1,37 +1,16 @@
-import EntityMovents from "./models/Entity/EntityMovents.js";
 import Map from "./Map.js";
 import Mob from "./models/Entity/Mob.js";
 import Player from "./models/Entity/Player.js";
-
 
 const map = new Map()
 
 const player = new Player(map)
 
-player.generateEntity(player)
+player.generateEntity()
 
 const mob = new Mob(map)
-mob.generateEntity(mob)
+mob.generateEntity()
 
-const test = (x, y) => {
-
-    let max = 0
-
-    const pixel = map.pixel
-    while (max > 0) {
-
-        const newX = Math.floor(Math.random() * (map.width / pixel))
-        const newY = Math.floor(Math.random() * (map.heigth / pixel))
-
-        if (map.matriz[newY] && map.matriz[newY][newX] === 0) {
-            const entity = new EntityMovents(map)
-            entity.generateEntity(entity, newX * pixel, newY * pixel)
-            max -= 1
-        }
-    }
-}
-
-test()
 
 const img = new Image()
 img.src = "src/images/sky.jpg"
@@ -41,10 +20,8 @@ const animate = () => {
     map.ctx.clearRect(0, 0, map.width, map.heigth)
 
     Object.values(map.entityList).forEach(entity => {
-
-        if (!entity.jumping && !player.pause && !entity.fly && player.onFreeFall) {
-            entity.freeFall()
-        }
+        
+        entity.render()
 
         map.ctx.save()
 

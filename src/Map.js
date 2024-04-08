@@ -18,9 +18,8 @@ export default class Map {
         this.generateMatriz()
     }
 
+    generateMatriz() {
 
-
-    test (){
         const pixel = this.pixel
 
         const heigth = Math.round(this.heigth / pixel)
@@ -29,20 +28,6 @@ export default class Map {
         this.matriz = Array.from({ length: heigth },
             () => Array.from({ length: width }, () => 0)
         )
-    }
-
-    generateMatriz() {
-
-        // window.addEventListener("resize", () => {
-        //     canvans.width = window.innerWidth
-        //     canvans.height = window.innerHeight - 100
-        //     this.width = canvans.width
-        //     this.heigth = canvans.height
-        
-        //     this.test()
-        // })
-
-        this.test()
     }
 }
 

@@ -7,6 +7,7 @@ const bow = {
     size: 1,
     range: 5,
     durability: 100,
+    icon : "falta poner"
 }
 
 

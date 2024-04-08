@@ -1,14 +1,13 @@
-import Entity from "./EntityMovents.js";
-import Sprites from "../../Sprites.js";
-import createItem from "../../items/createItem.js";
+import SpritesProcedural from "../../SpritesProcedural.js";
+import EntityActions from "./EntityActions.js";
 
 
-export default class Player extends Entity {
+export default class Player extends EntityActions {
 
     constructor(map) {
         super(map)
         this.x = 0 * 24
-        this.y = 0 * 24
+        this.y = 500 * 24
         this.width = this.map.pixel * 2
         this.heigth = this.map.pixel * 3
         this.velocity = {
@@ -31,7 +30,7 @@ export default class Player extends Entity {
                 vel: 1.2,
                 damage: 10,
                 size: 1,
-                range: 5,
+                range: 10,
                 durability: 100,
             } //=> va el objecto completo del equipamento, con todas sus caractericas etc.
         }
@@ -42,16 +41,17 @@ export default class Player extends Entity {
                 damage: 25,
             }
         }
-        this.onFreeFall = true
-        this.jumping = false
         this.isCollapse = false
-        this.id = 0
         this.pause = false
         this.name = "player"
         this.color = "blue"
         this.fly = false
         this.constrols() //=> Auto ejecutable
-        this.sprite = new Sprites()
+        this.sprite = new SpritesProcedural()
+    }
+
+    render() {
+        this.freeFall()
     }
 
     constrols() {
@@ -70,7 +70,10 @@ export default class Player extends Entity {
             // this.sprite.handlerSprite({ type: this.direction == "rigth" ? "idleR" : "idleL" })
         })
 
+
+
         window.addEventListener("keydown", (e) => {
+            if(this.attacking) return
             e.stopPropagation()
 
             if (e.key == "d") {
@@ -88,7 +91,6 @@ export default class Player extends Entity {
                 this.direction = "bottom"
                 this.entityCheck({ dy: this.velocity.vx })
             } else if (e.key == "Escape") {
-                console.log(new createItem(this.map))
             } else if (e.key == "Tab") {
                 console.log(this)
                 console.log(this.map.matriz)

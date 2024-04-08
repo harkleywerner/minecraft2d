@@ -1,6 +1,7 @@
 "use strict"
 //Los valores de las matrices se deben tratar con Floor.
 //Por que si es un decimal por ejempl
+
 export default class Entity {
     constructor(map) {
         this.map = map
@@ -8,13 +9,14 @@ export default class Entity {
         this.y = 0
         this.width = this.map.pixel * 1
         this.heigth = this.map.pixel * 1
-        this.id = Math.random()
+        this.id
         this.name = "entity"
         this.velocity = {
             vx: 12, //=> Tiene que ser divisible % 24, para que pueda encajar en los bloques perfectamente
             vy: 0,
             max_vx: 12
         }
+        this.onFreeFall = true
         this.isCollapse = false //Indica si se debe o no colapsar la entidad.
         this.hit_box = {
             x: 1,
@@ -22,14 +24,17 @@ export default class Entity {
         }
     }
 
-    generateEntity(entity, x, y) {
+    generateEntity(x, y,f) {
 
-        this.x = x || this.x
-        this.y = y || this.y
+        if (this.id) return
 
-        this.map.entityList[this.id] = entity
+        const id = Math.random()
 
-        this.entityCheck()
+        this.id = id
+
+        this.map.entityList[id] = this
+
+        this.entityCheck({ dx: x, dy: y,exclusionary : f })
     }
 
     despawnEntity({ entity } = {}) { //Despawnea de todas partes a la entidad.
@@ -41,8 +46,6 @@ export default class Entity {
             delete currentEntity.map.entityList[id]
             currentEntity.removeEntityInMatriz()
         }
-
-
     }
 
     removeEntityInMatriz() { //Cambiar por nombre de matriz
@@ -116,7 +119,7 @@ export default class Entity {
 
     }
 
-    entityCheck({ dx = 0, dy = 0 } = {}) {
+    entityCheck({ dx = 0, dy = 0, exclusionary  } = {}) {
 
         if (this.pause) return
 
@@ -124,7 +127,10 @@ export default class Entity {
 
         const colission = this.collisionCheck({ dx, dy })
 
-        if (typeof colission === "object") {
+
+        if (typeof colission === "object" && exclusionary !== colission?.id) {
+
+
 
             const reamingX = Math.abs(this.x - colission.x)
             const reamingY = Math.abs(this.y - colission.y)
@@ -155,7 +161,7 @@ export default class Entity {
 
         const limiteY = this.y == this.map.heigth - this.heigth
 
-        if (limiteY) {
+        if (limiteY || this.jumping || this.pause || this.fly || !this.onFreeFall) {
             return this.velocity.vy = 0
         }
 
